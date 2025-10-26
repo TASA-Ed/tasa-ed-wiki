@@ -31,18 +31,27 @@ const handleClick = () => {
 
 <style scoped lang="scss">
 .info-card {
-  background: white;
+  // 使用 CSS 变量以便在深色模式下切换
+  --card-bg: white;
+  --card-border: #e8e8e8;
+  --card-shadow: rgba(0, 0, 0, 0.1);
+  --card-shadow-hover: rgba(0, 0, 0, 0.15);
+  --title-color: #1890ff;
+  --divider-color: #d9d9d9;
+  --description-color: #8c8c8c;
+
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 20px 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px var(--card-shadow);
   cursor: pointer;
   transition: all 0.3s ease;
-  border: 1px solid #e8e8e8;
+  border: 1px solid var(--card-border);
   margin-bottom: 8px;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px var(--card-shadow-hover);
   }
 
   .card-content {
@@ -52,24 +61,35 @@ const handleClick = () => {
     flex-wrap: wrap;
 
     .card-title {
-      color: #1890ff;
+      color: var(--title-color);
       font-size: 16px;
       font-weight: 600;
       white-space: nowrap;
     }
 
     .card-divider {
-      color: #d9d9d9;
+      color: var(--divider-color);
       font-size: 14px;
       font-weight: 300;
     }
 
     .card-description {
-      color: #8c8c8c;
+      color: var(--description-color);
       font-size: 14px;
       flex: 1;
       min-width: 200px;
     }
+  }
+
+  // 深色模式适配
+  [data-theme="dark"] & {
+    --card-bg: #1f1f1f;
+    --card-border: #303030;
+    --card-shadow: rgba(0, 0, 0, 0.3);
+    --card-shadow-hover: rgba(0, 0, 0, 0.5);
+    --title-color: #40a9ff;
+    --divider-color: #434343;
+    --description-color: #a6a6a6;
   }
 }
 </style>
