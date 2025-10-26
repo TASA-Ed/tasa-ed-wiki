@@ -28,6 +28,11 @@ export default hopeTheme({
 
     // 导航栏
     fullscreen: true,
+    navbarLayout: {
+        start: ["Brand"],
+        center: ["Links"],
+        end: ["qqGroupLink", "Outlook", "Language", "Search"],
+    },
     navbar,
 
     // 侧边栏
