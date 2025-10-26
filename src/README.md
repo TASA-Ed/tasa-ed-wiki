@@ -1,6 +1,6 @@
 ---
 icon: home
-title: 首页
+title: 主页
 description: TASA-Ed工作室百科
 isOriginal: true
 ---
@@ -25,12 +25,6 @@ link="/wiki/tasaed.html"
 title="德二吹风机"
 description="关于工作室创始人。"
 link="/wiki/ccd2s.html"
-/>
-
-<LinkCard
-title="故人何年何月何时归？"
-description="关于德二吹风机写的一些东西。"
-link="/wiki/whenareyouback.html"
 />
 
 ## 百科 - 项目

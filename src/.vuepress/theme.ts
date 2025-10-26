@@ -6,7 +6,7 @@ import sidebar from "./sidebar.js";
 export default hopeTheme({
     hostname: "https://wiki.tasaed.top",
 
-    logo: "/assets/t832.png",
+    logo: "/assets/logo/t832.png",
 
     favicon: "favicon.ico",
 
@@ -63,6 +63,10 @@ export default hopeTheme({
                 "/assets/fontawesome/css/regular.min.css",
                 "/assets/fontawesome/css/fontawesome.min.css"
             ]
+        },
+
+        components: {
+            components: ["Badge", "VPCard"],
         },
     },
 });
