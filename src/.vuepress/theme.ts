@@ -1,6 +1,5 @@
 import { hopeTheme } from "vuepress-theme-hope";
 
-import navbar from "./navbar.js";
 import sidebar from "./sidebar.js";
 
 export default hopeTheme({
@@ -30,10 +29,9 @@ export default hopeTheme({
     fullscreen: true,
     navbarLayout: {
         start: ["Brand"],
-        center: ["Links"],
-        end: ["qqGroupLink", "Outlook", "Language", "Search"],
+        center: ["Search"],
+        end: ["qqGroupLink", "Outlook", "Language"],
     },
-    navbar,
 
     // 侧边栏
     sidebar,
@@ -56,6 +54,12 @@ export default hopeTheme({
     },
 
     plugins: {
+        meilisearch: {
+            host: "https://api.tasaed.top/search",
+            apiKey: "010ca72507047d113e1bb4e853ad720cae2acd5be1a6ddf00957367b5c08572c",
+            indexUid: "vuepress_wiki",
+        },
+
         // 在移动设备上显示复制按钮
         copyCode: {
             showInMobile: true,
