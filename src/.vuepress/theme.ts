@@ -8,7 +8,7 @@ export default hopeTheme({
 
     logo: "/assets/logo/t832.png",
 
-    favicon: "favicon.ico",
+    favicon: "/favicon.ico",
 
     repoDisplay: false,
 
@@ -56,6 +56,12 @@ export default hopeTheme({
     },
 
     plugins: {
+        // 在移动设备上显示复制按钮
+        copyCode: {
+            showInMobile: true,
+            duration: 1500,
+        },
+
         icon: {
             assets: [
                 "/assets/fontawesome/css/brands.min.css",
@@ -68,5 +74,17 @@ export default hopeTheme({
         components: {
             components: ["Badge", "VPCard"],
         },
-    },
+
+        feed: {
+            rss: true,
+            image: "/assets/logo/t832.png",
+            icon: "/assets/favicon.ico",
+            channel: {
+                copyright: "Copyright © 2020-2025 TASA-Ed工作室",
+                ttl: 4320,
+                image: "/assets/logo/t832.png",
+                icon: "/assets/favicon.ico"
+            }
+        },
+    }
 });
