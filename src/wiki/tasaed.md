@@ -45,14 +45,14 @@ TASA-Ed 工作室于 2020 年 12 月 20 日 成立，最初的名称是 TASA 工
 
 <LinkCard
 title="SCP 2.5D"
-description="SCP基金会社区背景游戏。GitHub 页面"
+description="SCP 基金会社区背景游戏。GitHub 页面"
 link="https://github.com/TASA-Ed/scp25d"
 target="_blank"
 />
 
 <LinkCard
 title="SCP 2.5D - SE"
-description="来自于SCP 2.5D的分支。GitHub 页面"
+description="来自于 SCP 2.5D 的分支。GitHub 页面"
 link="https://github.com/TASA-Ed/scp25d-SE"
 target="_blank"
 />
