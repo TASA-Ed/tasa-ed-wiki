@@ -54,6 +54,21 @@ export default hopeTheme({
     },
 
     plugins: {
+        comment: {
+            provider: "Artalk",
+            server: "https://talk.tasaed.top",
+            locale: "zh-CN",
+            emoticons: "https://api.tasaed.top/artalk/default.json",
+            placeholder: "输入你想说的话吧",
+            noComment: "这里还没有评论，快来抢沙发！",
+            sendBtn: "点击发送",
+            uaBadge: true,
+            gravatar: {
+                mirror: "https://cn.cravatar.com/avatar/",
+                params: "sha256=1&d=mp&s=240&d=retro",
+            },
+        },
+
         meilisearch: {
             host: "https://api.tasaed.top/search",
             apiKey: "010ca72507047d113e1bb4e853ad720cae2acd5be1a6ddf00957367b5c08572c",
