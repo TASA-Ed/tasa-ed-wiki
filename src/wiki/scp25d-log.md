@@ -1,10 +1,12 @@
 ---
 icon: scroll
-title: SCP：2.5D(或SE) 更新日志
-description: SCP：2.5D或SCP：2.5D-SE 的更新日志
+title: SCP：2.5D(或 SE) 更新日志
+description: SCP：2.5D 或 SCP：2.5D-SE 的更新日志
 isOriginal: true
 order: 4
 ---
+
+SCP：2.5D 或 SCP：2.5D-SE 的更新日志
 
 ## 重制版
 

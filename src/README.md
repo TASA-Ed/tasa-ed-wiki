@@ -50,12 +50,6 @@ link="/wiki/api.html"
 />
 
 <LinkCard
-title="历史时代3 CeryEouer 时代2 MOD"
-description="历史时代3的一个模组。"
-link="/wiki/aoh3ce2/info.html"
-/>
-
-<LinkCard
 title="TASA-Ed网站"
 description="泛指TASA-Ed工作室的所有网站。"
 link="/wiki/ourwebsite.html"

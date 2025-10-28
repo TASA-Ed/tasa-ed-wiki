@@ -1,7 +1,7 @@
 ---
 icon: gamepad
-title: SCP：2.5D(或SE)
-description: SCP：2.5D或SCP：2.5D-SE
+title: SCP：2.5D(或 SE)
+description: SCP：2.5D 或 SCP：2.5D-SE
 isOriginal: true
 order: 3
 ---
