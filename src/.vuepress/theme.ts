@@ -69,6 +69,11 @@ export default hopeTheme({
             },
         },
 
+        pwa: {
+            update: "force",
+            favicon: "/favicon.ico",
+        },
+
         meilisearch: {
             host: "https://api.tasaed.top/search",
             apiKey: "010ca72507047d113e1bb4e853ad720cae2acd5be1a6ddf00957367b5c08572c",

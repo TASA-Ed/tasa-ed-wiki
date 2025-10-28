@@ -1,0 +1,17 @@
+{
+  "name": "TASA-Ed Wiki 百科",
+  "short_name": "TASA-Ed Wiki",
+  "description": "TASA-Ed 工作室 百科",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "lang": "zh-CN",
+  "background_color": "#fff",
+  "theme_color": "#2196f3",
+  "icons": [
+    {
+      "src": "/assets/logo/t832.png",
+      "sizes": "832x832",
+      "type": "image/png"
+    }
+  ]
+}

@@ -8,7 +8,8 @@ export default sidebar({
             icon: "book",
             prefix: "wiki/",
             collapsible: true,
-            children: "structure"
+            children: "structure",
+            expanded: true
         },
     ],
 });
