@@ -1,0 +1,4 @@
+- `format`:
+  - `text`(默认):输出文本格式。
+  - `json`:输出 json 格式。
+  - `xml`:输出 xml 格式。
