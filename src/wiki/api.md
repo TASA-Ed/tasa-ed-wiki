@@ -406,7 +406,7 @@ GET https://api.tasaed.top/get/slServer/
 ```
 
 ::: caution
-在中国，有相当一部分 SCP: Secret Laboratory 服务器屏蔽了海外请求，因此你无法获取到任何信息，只会返回 `{"data":"Failed to read any data from socket","success":false}` 。
+在中国，有相当一部分 SCP: Secret Laboratory 服务器屏蔽了海外 UDP 请求，因此你可能无法获取到任何信息，只会返回 `{"data":"Failed to read any data from socket","success":false}` 。
 :::
 
 #### 参数

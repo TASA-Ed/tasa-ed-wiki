@@ -20,7 +20,7 @@ export default hopeTheme({
     },
 
     // 页面信息
-    pageInfo: ["Author", "Date", "PageView", "ReadingTime", "Word"],
+    pageInfo: ["Author", "PageView", "ReadingTime", "Word"],
     contributors: false,
     changelog: false,
     editLink: false,

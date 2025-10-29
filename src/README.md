@@ -8,7 +8,7 @@ isOriginal: true
 TASA-Ed工作室百科。
 
 ::: tip
-TASA-Ed 百科仍在完善内容中。
+TASA-Ed 百科仍在完善内容中！
 :::
 
 ## 百科 - 关于
