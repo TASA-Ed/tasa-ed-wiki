@@ -1,6 +1,7 @@
 import { defineUserConfig } from "vuepress";
 
 import theme from "./theme.js";
+import { llmsPlugin } from '@vuepress/plugin-llms'
 
 export default defineUserConfig({
     base: "/",
@@ -12,5 +13,11 @@ export default defineUserConfig({
 
     theme,
 
-    shouldPrefetch: false
+    shouldPrefetch: false,
+
+    plugins: [
+        llmsPlugin({
+            domain: "https://wiki.tasaed.top"
+        }),
+    ]
 });

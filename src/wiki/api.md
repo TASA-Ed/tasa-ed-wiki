@@ -80,7 +80,7 @@ false ;
 
 查询当前可用性。
 
-```http request
+```http request :no-line-numbers :no-line-numbers
 GET https://api.tasaed.top/
 ```
 
@@ -100,7 +100,7 @@ GET https://api.tasaed.top/
 
 获取时间。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/time/
 ```
 
@@ -138,7 +138,7 @@ GET https://api.tasaed.top/time/
 
 哈希值计算。推荐使用此API。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/hash/
 ```
 
@@ -164,7 +164,7 @@ GET https://api.tasaed.top/hash/
 
 Base64编码或解码。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/base/
 ```
 
@@ -188,7 +188,7 @@ GET https://api.tasaed.top/base/
 
 生成一个随机数。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/rand/
 ```
 
@@ -216,7 +216,7 @@ GET https://api.tasaed.top/rand/
 
 生成通用唯一按字典排序的标识符（ULID）。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/ulid/
 ```
 
@@ -236,7 +236,7 @@ GET https://api.tasaed.top/ulid/
 
 RGB与16进制互转。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/color/h2r/
 ```
 
@@ -261,7 +261,7 @@ GET https://api.tasaed.top/color/h2r/
 
 将任意中文转为拼音。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/pinyin/
 ```
 
@@ -297,7 +297,7 @@ GET https://api.tasaed.top/pinyin/
 
 获取您当前的IP。支持 IPv6。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/ip/
 ```
 
@@ -313,7 +313,7 @@ GET https://api.tasaed.top/ip/
 
 获取浏览器当前的UA。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/ua/
 ```
 
@@ -331,7 +331,7 @@ GET https://api.tasaed.top/ua/
 
 获取今日的必应壁纸链接。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/get/bingtoday/
 ```
 
@@ -364,7 +364,7 @@ GET https://api.tasaed.top/get/bingtoday/
 
 获取 Minecraft 服务器信息。仅支持 Java 1.7+。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/get/minecraftServer/
 ```
 
@@ -401,7 +401,7 @@ GET https://api.tasaed.top/get/minecraftServer/
 
 获取 SCP: Secret Laboratory 服务器信息。可能支持其他起源引擎游戏服务器。
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/get/slServer/
 ```
 
@@ -443,11 +443,11 @@ GET https://api.tasaed.top/get/slServer/
 
 ### NT QQ 签名服务器
 
-```http request
+```http request :no-line-numbers
 GET https://api.tasaed.top/sign/39038/
 ```
 
-```http request
+```http request :no-line-numbers
 POST https://api.tasaed.top/sign/39038
 ```
 
