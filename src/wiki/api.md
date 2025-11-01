@@ -399,7 +399,7 @@ GET https://api.tasaed.top/get/minecraftServer/
 
 ### 获取 SL 服务器信息
 
-获取 SCP: Secret Laboratory 服务器信息。可能支持其他起源引擎游戏服务器。
+获取 SCP: Secret Laboratory 服务器信息。可能适用于其他支持 [A2S](https://developer.valvesoftware.com/wiki/Server_queries) 协议查询的游戏服务器。
 
 ```http request :no-line-numbers
 GET https://api.tasaed.top/get/slServer/
@@ -441,14 +441,4 @@ GET https://api.tasaed.top/get/slServer/
 
 ## 其他
 
-### NT QQ 签名服务器
-
-```http request :no-line-numbers
-GET https://api.tasaed.top/sign/39038/
-```
-
-```http request :no-line-numbers
-POST https://api.tasaed.top/sign/39038
-```
-
-NT QQ 签名服务器。For Lagrange(V1)。
+无。
