@@ -43,6 +43,8 @@ TASA-Ed 工作室于 2020 年 12 月 20 日 成立，最初的名称是 TASA 工
 
 ## 项目列表
 
+### 开源项目
+
 <LinkCard
 title="SCP 2.5D"
 description="SCP 基金会社区背景游戏。GitHub 页面"
@@ -77,6 +79,29 @@ description="官网（React，部分页面尚未上线）。GitHub 页面"
 link="https://github.com/TASA-Ed/tasa-ed-page"
 target="_blank"
 />
+
+<LinkCard
+title="鹰歌游戏启动器 V2"
+description="用于启动鹰歌游戏（C++）。GitHub 页面"
+link="https://github.com/TASA-Ed/MakerFrameLauncherV2"
+target="_blank"
+/>
+
+### 其他
+
+<div class="vp-card-container">
+  <VPCard
+    title="SCP 游戏助手"
+    desc="一个整理 SCP 基金会题材游戏资源，教程的软件。于 2022 年停止运营。"
+    logo="/assets/logo/sgas-icon.png"
+    background=var(--vpcard-members)
+  />
+  <VPCard
+    title="开源 - 计算机制造商"
+    desc="一款经营模拟题材游戏。目前正在开发中。"
+    background=var(--vpcard-members)
+  />
+</div>
 
 ## 联系我们
 
