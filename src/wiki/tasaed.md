@@ -75,8 +75,15 @@ target="_blank"
 
 <LinkCard
 title="TASA-Ed 官网"
-description="官网（React，部分页面尚未上线）。GitHub 页面"
+description="官网（Vue）。GitHub 页面"
 link="https://github.com/TASA-Ed/tasa-ed-page"
+target="_blank"
+/>
+
+<LinkCard
+title="TASA-Ed Wiki"
+description="TASA-Ed 百科。GitHub 页面"
+link="https://github.com/TASA-Ed/tasa-ed-wiki"
 target="_blank"
 />
 
