@@ -70,7 +70,7 @@ export default hopeTheme({
         },
 
         pwa: {
-            update: "force",
+            update: "disable",
             favicon: "/favicon.ico",
         },
 
