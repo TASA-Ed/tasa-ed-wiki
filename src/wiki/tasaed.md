@@ -121,6 +121,13 @@ link="mailto:studio@tasaed.top"
 target="_blank"
 />
 
+<LinkCard
+title="QQ 群"
+description="TASA-Ed工作室用户&开发交流群"
+link="https://qm.qq.com/q/od7wxNv7YA"
+target="_blank"
+/>
+
 ## 相关链接
 
 <LinkCard
