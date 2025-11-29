@@ -1,0 +1,40 @@
+name: Build Test
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main","dev"]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set pnpm 10
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set Node.js 24
+        uses: actions/setup-node@v5
+        with:
+          # 选择要使用的 node 版本
+          node-version: 24
+          # 缓存 pnpm 依赖
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Modules
+        run: pnpm install --frozen-lockfile
+
+      - name: Build on Ubuntu
+        run: pnpm vuepress-vite build src
