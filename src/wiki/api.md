@@ -269,8 +269,6 @@ GET https://api.tasaed.top/pinyin/
 
 <!-- @include: ../format.snippet.md -->
 
-- `format`:
-  - `json`: 输出json格式。
 - `type`: 为转拼音类型。
   - `1` : 普通句子转拼音。
   - `2` : 在转为拼音的同时保留所有非汉字字符。
@@ -290,6 +288,27 @@ GET https://api.tasaed.top/pinyin/
 
 - [句子转拼音 - 姓名转换 *单某某转成拼音，连接符为-，样式为无声调*](https://api.tasaed.top/pinyin/?content=%E5%8D%95%E6%9F%90%E6%9F%90&type=3&join=-&tonestyle=none)
 - [句子转拼音 - 普通句子转换 *你好，世界转成拼音，连接符为sp（空格），样式为有声调*](https://api.tasaed.top/pinyin/?content=%E4%BD%A0%E5%A5%BD%EF%BC%8C%E4%B8%96%E7%95%8C&type=1&join=sp)
+
+### Steam ID
+
+[Steam ID 64 与 Steam ID 3](https://developer.valvesoftware.com/wiki/Zh/SteamID) 互转。
+
+```http request :no-line-numbers
+GET https://api.tasaed.top/get/steamid/
+```
+
+#### 参数
+
+<!-- @include: ../format.snippet.md -->
+
+- `type`: 为转拼音类型。
+  - `1` : Steam ID 64 转 Steam ID 3。
+  - `2` : （默认）Steam ID 3 转 Steam ID 64。
+- `id`: Steam ID。
+
+#### 示例
+
+- [Steam ID - Steam ID 3 转 Steam ID 64 *将 1 转 Steam ID 64*](https://api.tasaed.top/get/steamid/?id=1)
 
 ## 获取相关
 

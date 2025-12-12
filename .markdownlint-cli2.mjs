@@ -46,11 +46,12 @@ export default {
                 "ToggleFullScreenButton",
                 "ToggleRTLButton",
                 "LinkCard"
-            ],
-        },
+            ]
+        }
     },
     ignores: [
         "**/node_modules/**",
-        "**/*.snippet.md",
-    ],
+        "**/.vuepress/**",
+        "**/*.snippet.md"
+    ]
 };
