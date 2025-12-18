@@ -1,7 +1,7 @@
 {
   "name": "tasa-ed-wiki",
   "description": "TASA-Ed Wiki",
-  "version": "1.8.4+20251213",
+  "version": "1.8.5+20251218",
   "license": "CC BY-SA 4.0",
   "type": "module",
   "scripts": {
@@ -12,14 +12,14 @@
   },
   "devDependencies": {
     "@vuepress/bundler-vite": "2.0.0-rc.26",
-    "@vuepress/plugin-feed": "2.0.0-rc.120",
-    "@vuepress/plugin-llms": "2.0.0-rc.118",
-    "@vuepress/plugin-meilisearch": "2.0.0-rc.120",
-    "@vuepress/plugin-pwa": "2.0.0-rc.120",
+    "@vuepress/plugin-feed": "2.0.0-rc.121",
+    "@vuepress/plugin-llms": "2.0.0-rc.121",
+    "@vuepress/plugin-meilisearch": "2.0.0-rc.121",
+    "@vuepress/plugin-pwa": "2.0.0-rc.121",
     "artalk": "^2.9.1",
     "markdownlint-cli2": "^0.20.0",
-    "sass-embedded": "^1.96.0",
-    "vue": "^3.5.25",
+    "sass-embedded": "^1.97.0",
+    "vue": "^3.5.26",
     "vuepress": "2.0.0-rc.26",
     "vuepress-theme-hope": "2.0.0-rc.99"
   },
