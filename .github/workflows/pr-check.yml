@@ -38,3 +38,9 @@ jobs:
 
       - name: Build on Ubuntu
         run: pnpm vuepress-vite build src
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: dist
+          path: src/.vuepress/dist/
