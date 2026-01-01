@@ -57,7 +57,7 @@ jobs:
           rm: true
 
       - name: Execute remote commands
-        if: ${{ vars.DIR }}
+        if: ${{ secrets.DIR }}
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -65,16 +65,16 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            if [ ! -d "/${{ vars.DIR }}/" ]; then exit 1; fi
+            if [ ! -d "/${{ secrets.DIR }}/" ]; then exit 1; fi
 
             # 清除目标目录
-            sudo rm -rf /${{ vars.DIR }}/*
+            sudo rm -rf /${{ secrets.DIR }}/*
             
             # 移动文件到目标目录
-            sudo mv /tmp/deploy-temp/.vuepress/dist/* /${{ vars.DIR }}/
+            sudo mv /tmp/deploy-temp/.vuepress/dist/* /${{ secrets.DIR }}/
             
             # 更改所有者和用户组
-            sudo chown -R 1000:1000 /${{ vars.DIR }}/
+            sudo chown -R 1000:1000 /${{ secrets.DIR }}/
             
             # 清理临时目录
             rm -rf /tmp/deploy-temp
