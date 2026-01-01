@@ -3,8 +3,6 @@ name: Build Test
 on:
   pull_request:
     branches: ["master"]
-  push:
-    branches: ["master","dev"]
 
 jobs:
   docs:
@@ -38,9 +36,3 @@ jobs:
 
       - name: Build on Ubuntu
         run: pnpm vuepress-vite build src
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v6
-        with:
-          name: dist
-          path: src/.vuepress/dist/

@@ -1,0 +1,81 @@
+name: Build Test
+
+on:
+  push:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          # “最近更新时间” 等 git 日志相关信息，需要拉取全部提交记录
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set pnpm 10
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set Node.js 24
+        uses: actions/setup-node@v6
+        with:
+          # 选择要使用的 node 版本
+          node-version: 24
+          # 缓存 pnpm 依赖
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Modules
+        run: pnpm install --frozen-lockfile
+
+      - name: Build on Ubuntu
+        run: pnpm vuepress-vite build src
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: dist
+          path: src/.vuepress/dist/
+
+      - name: Deploy to server via SSH
+        uses: appleboy/scp-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          source: "src/.vuepress/dist/*"
+          target: "/tmp/deploy-temp"
+          strip_components: 1
+          rm: true
+
+      - name: Execute remote commands
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+             if [ ! -d "/${{ vars.DIR || omg_you_cant_remove_all_file }}/" ]; then exit 1; fi
+
+            # 清除目标目录
+            sudo rm -rf /${{ vars.DIR || omg_you_cant_remove_all_file }}/*
+            
+            # 移动文件到目标目录
+            sudo mv /tmp/deploy-temp/* /${{ vars.DIR || omg_you_cant_remove_all_file }}/
+            
+            # 更改所有者和用户组
+            sudo chown -R 1000:1000 /${{ vars.DIR || omg_you_cant_remove_all_file }}/
+            
+            # 清理临时目录
+            rm -rf /tmp/deploy-temp
+            
+            echo "Deployment completed successfully!"
