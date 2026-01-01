@@ -7,7 +7,7 @@ export default hopeTheme({
 
   logo: "/assets/logo/t832.png",
 
-  repo: "TASA-Ed/MakerFrameDocs",
+  repo: "TASA-Ed/tasa-ed-wiki",
 
   favicon: "/favicon.ico",
 
