@@ -64,16 +64,16 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            if [ ! -d "/${{ vars.DIR || omg_you_cant_remove_all_file }}/" ]; then exit 1; fi
+            if [ ! -d "/${{ vars.DIR || "omg_you_cant_remove_all_file" }}/" ]; then exit 1; fi
 
             # 清除目标目录
-            sudo rm -rf /${{ vars.DIR || omg_you_cant_remove_all_file }}/*
+            sudo rm -rf /${{ vars.DIR || "omg_you_cant_remove_all_file" }}/*
             
             # 移动文件到目标目录
-            sudo mv /tmp/deploy-temp/* /${{ vars.DIR || omg_you_cant_remove_all_file }}/
+            sudo mv /tmp/deploy-temp/* /${{ vars.DIR || "omg_you_cant_remove_all_file" }}/
             
             # 更改所有者和用户组
-            sudo chown -R 1000:1000 /${{ vars.DIR || omg_you_cant_remove_all_file }}/
+            sudo chown -R 1000:1000 /${{ vars.DIR || "omg_you_cant_remove_all_file" }}/
             
             # 清理临时目录
             rm -rf /tmp/deploy-temp
