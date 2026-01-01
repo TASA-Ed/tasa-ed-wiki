@@ -76,7 +76,4 @@ jobs:
             # 更改所有者和用户组
             sudo chown -R 1000:1000 /${{ vars.DIR }}/
             
-            # 清理临时目录
-            rm -rf /home/opt/temp/fs/
-            
             echo "Deployment completed successfully!"
