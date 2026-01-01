@@ -64,7 +64,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-             if [ ! -d "/${{ vars.DIR || omg_you_cant_remove_all_file }}/" ]; then exit 1; fi
+            if [ ! -d "/${{ vars.DIR || omg_you_cant_remove_all_file }}/" ]; then exit 1; fi
 
             # 清除目标目录
             sudo rm -rf /${{ vars.DIR || omg_you_cant_remove_all_file }}/*
