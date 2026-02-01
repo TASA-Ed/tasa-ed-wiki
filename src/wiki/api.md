@@ -6,6 +6,14 @@ isOriginal: true
 order: 6
 ---
 
+::: important
+近期我们更改了全部 API 对参数的判断模式，可能会导致一些参数错误，如果你遇到**请及时反馈**。
+:::
+
+::: important
+近期我们更改了[随机数生成](#随机数生成) 的默认生成器，请注意。
+:::
+
 TASA-Ed 工作室提供的 PHP-API
 
 ## 返回格式
@@ -200,8 +208,8 @@ GET https://api.tasaed.top/rand/
 - `max`: 最大数。
 - `type`:
   - `0` 为使用梅森旋转（Mersenne Twister）随机数生成器。
-  - `1` 为使用加密安全、均匀分布的生成器。
-  - 不指定或指定错误将使用默认生成器。
+  - `1` 为使用默认生成器。
+  - 不指定或指定错误将默认使用加密安全、均匀分布的生成器。
 
 #### 返回
 
@@ -209,8 +217,8 @@ GET https://api.tasaed.top/rand/
 
 #### 示例
 
-- [随机数生成 - 生成随机数 *默认生成器*](https://api.tasaed.top/rand/?min=1&max=9)
-- [随机数生成 - 生成随机数2 *加密安全、均匀分布的生成器*](https://api.tasaed.top/rand/?type=2&min=1&max=9)
+- [随机数生成 - 生成随机数 *加密安全、均匀分布的生成器*](https://api.tasaed.top/rand/?min=1&max=9)
+- [随机数生成 - 生成随机数2 *默认生成器*](https://api.tasaed.top/rand/?type=2&min=1&max=9)
 
 ### 生成 ULID
 
