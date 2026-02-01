@@ -60,13 +60,16 @@ jobs:
         uses: appleboy/ssh-action@v1
         env: 
           INDEX_DIR: ${{ secrets.DIR }}
+          SEARCH_KEY: ${{ secrets.SEARCH_KEY }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          envs: INDEX_DIR
+          envs: INDEX_DIR,SEARCH_KEY
           script: |
+            set -e
+            
             if [ ! -d "/$INDEX_DIR/index/" ]; then exit 1; fi
 
             # 清除目标目录
@@ -82,3 +85,12 @@ jobs:
             rm -rf /tmp/deploy-temp
 
             echo "Deployment completed successfully!"
+            
+            docker run -t --rm \
+              --network=host \
+              -e MEILISEARCH_HOST_URL='https://api.tasaed.top/search' \
+              -e MEILISEARCH_API_KEY=${SEARCH_KEY} \
+              -v /home/app/docs-scraper/index.json:/docs-scraper/config.json \
+              jqiue/docs-scraper:v0.13.1 pipenv run ./docs_scraper config.json
+            
+            echo "Indexing completed successfully!"
