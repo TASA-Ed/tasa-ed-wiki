@@ -8,7 +8,7 @@ order: 2
 
 关于工作室创始人。
 
-![德二吹风机 =320x320](/assets/avatar/ccd2s.jpg "德二吹风机 头像")
+![德二吹风机 =320x320](/assets/avatar/ccd2s.webp "德二吹风机 头像")
 
 ## 1.德二吹风机这个名字的出现
 

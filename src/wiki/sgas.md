@@ -12,7 +12,7 @@ TASA-Ed 工作室的一款应用，截至目前已停运
 
 注：SCP 游戏助手现已永久停运。
 
-![SCP 游戏助手 =270x270](/assets/logo/sgas-icon.png "SCP 游戏助手 图标")
+![SCP 游戏助手 =270x270](/assets/logo/sgas-icon.webp "SCP 游戏助手 图标")
 
 ## 简介
 

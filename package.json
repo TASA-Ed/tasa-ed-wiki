@@ -1,7 +1,7 @@
 {
   "name": "tasa-ed-wiki",
   "description": "TASA-Ed Wiki",
-  "version": "1.8.9+20260225",
+  "version": "1.8.10+20260304",
   "license": "CC BY-SA 4.0",
   "type": "module",
   "scripts": {
@@ -28,6 +28,9 @@
     "onlyBuiltDependencies": [
       "@parcel/watcher",
       "esbuild"
-    ]
+    ],
+    "overrides": {
+      "vite": "npm:rolldown-vite@7.3.1"
+    }
   }
 }

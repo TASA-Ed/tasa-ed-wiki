@@ -30,13 +30,13 @@ TASA-Ed 工作室于 2020 年 12 月 20 日 成立，最初的名称是 TASA 工
   <VPCard
     title="德二吹风机（ccD2s）"
     desc="工作室的创立者。"
-    logo="/assets/avatar/ccd2s.jpg"
+    logo="/assets/avatar/ccd2s.webp"
     background=var(--vpcard-members)
   />
   <VPCard
     title="DenSonet"
     desc="德二吹风机的好友。"
-    logo="/assets/avatar/densonet.jpg"
+    logo="/assets/avatar/densonet.webp"
     background=var(--vpcard-members)
   />
 </div>
@@ -100,7 +100,7 @@ target="_blank"
   <VPCard
     title="SCP 游戏助手"
     desc="一个整理 SCP 基金会题材游戏资源，教程的软件。于 2022 年停止运营。"
-    logo="/assets/logo/sgas-icon.png"
+    logo="/assets/logo/sgas-icon.webp"
     background=var(--vpcard-members)
   />
   <VPCard

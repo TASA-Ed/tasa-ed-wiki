@@ -12,7 +12,7 @@ order: 3
 
 同时本游戏遵守 [CC-BY-SA-4.0 协议](https://creativecommons.org/licenses/by-sa/4.0/deed.zh-hans)。
 
-![SCP：2.5D =200x200](/assets/logo/scp-2.5d-icon.png "SCP：2.5D 图标")
+![SCP：2.5D =200x200](/assets/logo/scp-2.5d-icon.webp "SCP：2.5D 图标")
 
 ## 简介
 
