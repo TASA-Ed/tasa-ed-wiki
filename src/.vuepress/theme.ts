@@ -55,18 +55,15 @@ export default hopeTheme({
 
   plugins: {
     comment: {
-      provider: "Artalk",
-      server: "https://talk.tasaed.top",
-      locale: "zh-CN",
-      emoticons: "https://api.tasaed.top/artalk/default.json",
-      placeholder: "输入你想说的话吧",
-      noComment: "这里还没有评论，快来抢沙发！",
-      sendBtn: "点击发送",
-      uaBadge: true,
-      gravatar: {
-        mirror: "https://cn.cravatar.com/avatar/",
-        params: "sha256=1&d=mp&s=240&d=retro",
-      },
+      provider: "Waline",
+      serverURL: "https://api.tasaed.top/talk",
+      emoji: ["https://cdn.tasaed.top/i/2026/qq", "https://cdn.tasaed.top/i/2026/bmoji", "https://cdn.tasaed.top/i/2026/emoji/gifs", "https://cdn.tasaed.top/i/2026/emoji/jpgs"],
+      dark: "auto",
+      requiredMeta: ['nick', 'mail'],
+      login: "enable",
+      wordLimit: [2, 300],
+      recaptchaV3Key: "6LdVtPgrAAAAAJtpGCnbua8kHO7G5T-xrStf6fnY",
+      reaction: ["https://cdn.tasaed.top/i/2026/bmoji/bmoji_thumb_up.png","https://cdn.tasaed.top/i/2026/emoji/reaction/181.png","https://cdn.tasaed.top/i/2026/emoji/reaction/297.png","https://cdn.tasaed.top/i/2026/bmoji/bmoji_doge.png","https://cdn.tasaed.top/i/2026/bmoji/bmoji_angry.png","https://cdn.tasaed.top/i/2026/bmoji/bmoji_um.png","https://cdn.tasaed.top/i/2026/emoji/reaction/38.png"],
     },
 
     pwa: {
@@ -76,7 +73,7 @@ export default hopeTheme({
 
     meilisearch: {
       host: "https://api.tasaed.top/search",
-      apiKey: "010ca72507047d113e1bb4e853ad720cae2acd5be1a6ddf00957367b5c08572c",
+      apiKey: "5c27ff5c25b3c6201c40dc9967a7280ae342589da217b8236a81a624d5a8ae43",
       indexUid: "vuepress_wiki",
     },
 
