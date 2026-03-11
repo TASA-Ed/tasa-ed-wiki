@@ -20,12 +20,15 @@ defineWalineConfig({
         formData.append("file", image);
         headers.append("Accept", "application/json");
 
-        const resp = await fetch("https://api.tasaed.top/image/upload", {
+        const resp = await fetch("https://api.tasaed.top/image/upload/", {
             method: "POST",
             headers: headers,
             body: formData,
         });
         const resp_1 = await resp.json();
+        if (resp_1.success === false) {
+            throw new Error(resp_1.message);
+        }
         return resp_1.data.links.url;
     },
 });
