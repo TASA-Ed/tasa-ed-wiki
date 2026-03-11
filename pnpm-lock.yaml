@@ -10,13 +10,17 @@ overrides:
 importers:
 
   .:
+    dependencies:
+      '@waline/client':
+        specifier: ^3.13.0
+        version: 3.13.0
     devDependencies:
       '@vuepress/bundler-vite':
         specifier: 2.0.0-rc.26
         version: 2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2)
       '@vuepress/plugin-comment':
-        specifier: 2.0.0-rc.125
-        version: 2.0.0-rc.125(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(@waline/client@3.13.0)(artalk@2.9.1(marked@17.0.4))(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))
+        specifier: 2.0.0-rc.124
+        version: 2.0.0-rc.124(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(@waline/client@3.13.0)(artalk@2.9.1(marked@17.0.4))(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))
       '@vuepress/plugin-feed':
         specifier: 2.0.0-rc.125
         version: 2.0.0-rc.125(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))
@@ -29,9 +33,6 @@ importers:
       '@vuepress/plugin-remove-pwa':
         specifier: 2.0.0-rc.125
         version: 2.0.0-rc.125(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))
-      '@waline/client':
-        specifier: ^3.13.0
-        version: 3.13.0
       markdownlint-cli2:
         specifier: ^0.21.0
         version: 0.21.0
@@ -1269,21 +1270,6 @@ packages:
 
   '@vuepress/plugin-comment@2.0.0-rc.124':
     resolution: {integrity: sha512-Dkg6P9f2cCE6a3JXCNUM2emTNwbCsCiHYYMNSxmUxM8lvi0E78hugvZ5d+G6rlioz6+DWW8NXpWibTOMrPkivQ==}
-    peerDependencies:
-      '@waline/client': ^3.7.1
-      artalk: ^2.9.1
-      twikoo: ^1.6.41
-      vuepress: 2.0.0-rc.26
-    peerDependenciesMeta:
-      '@waline/client':
-        optional: true
-      artalk:
-        optional: true
-      twikoo:
-        optional: true
-
-  '@vuepress/plugin-comment@2.0.0-rc.125':
-    resolution: {integrity: sha512-34t7FoPHTGeXJFKMIwZFxL7TV+0PllqPfCFNucDLLFVttxGLMGcbfRFtqMbCS4JuSa8EK80qWVKxm7gPW/8Q2g==}
     peerDependencies:
       '@waline/client': ^3.7.1
       artalk: ^2.9.1
@@ -4025,21 +4011,6 @@ snapshots:
   '@vuepress/plugin-comment@2.0.0-rc.124(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(@waline/client@3.13.0)(artalk@2.9.1(marked@17.0.4))(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))':
     dependencies:
       '@vuepress/helper': 2.0.0-rc.124(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))
-      '@vueuse/core': 14.2.1(vue@3.5.30)
-      giscus: 1.6.0
-      vue: 3.5.30
-      vuepress: 2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30)
-    optionalDependencies:
-      '@waline/client': 3.13.0
-      artalk: 2.9.1(marked@17.0.4)
-    transitivePeerDependencies:
-      - '@vuepress/bundler-vite'
-      - '@vuepress/bundler-webpack'
-      - typescript
-
-  '@vuepress/plugin-comment@2.0.0-rc.125(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(@waline/client@3.13.0)(artalk@2.9.1(marked@17.0.4))(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))':
-    dependencies:
-      '@vuepress/helper': 2.0.0-rc.125(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vuepress@2.0.0-rc.26(@vuepress/bundler-vite@2.0.0-rc.26(@types/node@25.4.0)(esbuild@0.27.3)(sass-embedded@1.98.0)(sass@1.98.0)(terser@5.46.0)(yaml@2.8.2))(vue@3.5.30))
       '@vueuse/core': 14.2.1(vue@3.5.30)
       giscus: 1.6.0
       vue: 3.5.30
