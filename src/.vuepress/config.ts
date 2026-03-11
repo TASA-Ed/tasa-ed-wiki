@@ -1,4 +1,5 @@
 import { defineUserConfig } from "vuepress";
+import { removePwaPlugin } from '@vuepress/plugin-remove-pwa'
 
 import theme from "./theme.js";
 import { llmsPlugin } from '@vuepress/plugin-llms'
@@ -18,6 +19,9 @@ export default defineUserConfig({
     plugins: [
         llmsPlugin({
             domain: "https://wiki.tasaed.top"
+        }),
+        removePwaPlugin({
+            swLocation: 'service-worker.js',
         }),
     ]
 });

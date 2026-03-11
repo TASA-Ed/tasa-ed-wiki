@@ -66,11 +66,6 @@ export default hopeTheme({
       reaction: ["https://cdn.tasaed.top/i/2026/bmoji/bmoji_thumb_up.png","https://cdn.tasaed.top/i/2026/emoji/reaction/181.png","https://cdn.tasaed.top/i/2026/emoji/reaction/297.png","https://cdn.tasaed.top/i/2026/bmoji/bmoji_doge.png","https://cdn.tasaed.top/i/2026/bmoji/bmoji_angry.png","https://cdn.tasaed.top/i/2026/bmoji/bmoji_um.png","https://cdn.tasaed.top/i/2026/emoji/reaction/38.png"],
     },
 
-    pwa: {
-      update: "disable",
-      favicon: "/favicon.ico",
-    },
-
     meilisearch: {
       host: "https://api.tasaed.top/search",
       apiKey: "5c27ff5c25b3c6201c40dc9967a7280ae342589da217b8236a81a624d5a8ae43",
