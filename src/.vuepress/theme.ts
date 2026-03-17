@@ -56,25 +56,25 @@ export default hopeTheme({
   plugins: {
     // rc.124
     comment: {
-      provider: "Waline",
-      locales: {
-        '/': {
-          admin: '可爱的管理员',
-          level0: '萌新',
-          level1: '普通',
-          level2: '高手',
-          level3: '小佬',
-          level4: '大佬',
-          level5: '真萌新',
-          reaction0: '点赞',
-          reaction1: '戳一戳',
-          reaction2: '拜谢',
-          reaction3: 'Doge',
-          reaction4: '生气',
-          reaction5: '无语',
-          reaction6: '敲打'
-        },
-      }
+      provider: "None",
+      // locales: {
+      //   '/': {
+      //     admin: '可爱的管理员',
+      //     level0: '萌新',
+      //     level1: '普通',
+      //     level2: '高手',
+      //     level3: '小佬',
+      //     level4: '大佬',
+      //     level5: '真萌新',
+      //     reaction0: '点赞',
+      //     reaction1: '戳一戳',
+      //     reaction2: '拜谢',
+      //     reaction3: 'Doge',
+      //     reaction4: '生气',
+      //     reaction5: '无语',
+      //     reaction6: '敲打'
+      //   },
+      // }
     },
 
     meilisearch: {
