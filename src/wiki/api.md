@@ -1,20 +1,16 @@
 ---
 icon: plug
-title: TASA-Ed PHP-API
-description: TASA-Ed 工作室提供的 PHP-API
+title: TASA-Ed RUST-API
+description: TASA-Ed 工作室提供的 RUST-API
 isOriginal: true
 order: 6
 ---
 
 ::: important
-近期我们更改了全部 API 对参数的判断模式，可能会导致一些参数错误，如果你遇到**请及时反馈**。
+近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。
 :::
 
-::: important
-近期我们更改了[随机数生成](#随机数生成) 的默认生成器，请注意。
-:::
-
-TASA-Ed 工作室提供的 PHP-API
+TASA-Ed 工作室提供的 RUST-API
 
 ## 返回格式
 
@@ -393,6 +389,12 @@ GET https://api.tasaed.top/get/bingtoday/
 
 ```http request :no-line-numbers
 GET https://api.tasaed.top/get/minecraftServer/
+###
+GET https://api.tasaed.top/get/minecraft-server/
+###
+GET https://api.tasaed.top/get/mc-server/
+###
+GET https://api.tasaed.top/get/mcServer/
 ```
 
 #### 参数
@@ -404,13 +406,13 @@ GET https://api.tasaed.top/get/minecraftServer/
 
 成功时返回：
 
-```json
+```jsonc
 {
-  "players": "<在线人数>/<最大人数>",
-  "text": "<服务器描述>",
-  "version": "<服务器版本>",
-  "protocol": 0,
-  "list": null | ["<玩家名称>"],
+  "players": "0/0", // <在线人数>/<最大人数>
+  "text": "", // 服务器描述
+  "version": "1.20.1", // 服务器版本
+  "protocol": 0, // 协议版本
+  "list": [], // ["<玩家名称>"]
   "success": true
 }
 ```
@@ -424,16 +426,22 @@ GET https://api.tasaed.top/get/minecraftServer/
 }
 ```
 
-### 获取 SL 服务器信息
+### 获取起源游戏服务器信息
 
-获取 SCP: Secret Laboratory 服务器信息。可能适用于其他支持 [A2S](https://developer.valvesoftware.com/wiki/Server_queries) 协议查询的游戏服务器。
+使用 [A2S](https://developer.valvesoftware.com/wiki/Server_queries) 协议获取起源游戏服务器信息。
 
 ```http request :no-line-numbers
+GET https://api.tasaed.top/get/a2sServer/
+###
+GET https://api.tasaed.top/get/a2s-server/
+###
+GET https://api.tasaed.top/get/sl-server/
+###
 GET https://api.tasaed.top/get/slServer/
 ```
 
 ::: caution
-在中国，有相当一部分 SCP: Secret Laboratory 服务器屏蔽了海外 UDP 请求，因此你可能无法获取到任何信息，只会返回 `{"data":"Failed to read any data from socket","success":false}` 。
+在中国，有相当一部分起源游戏服务器屏蔽了海外 UDP 请求，因此你可能无法获取到任何信息，只会返回 `{"data":"Failed to read any data from socket","success":false}` 。
 :::
 
 #### 参数
@@ -445,14 +453,20 @@ GET https://api.tasaed.top/get/slServer/
 
 成功时返回：
 
-```json
+```jsonc
 {
-  "title": "<服务器标题>",
-  "players": "<在线人数>/<最大人数>",
-  "bots": 0,
-  "version": "<服务器版本>",
-  "port": 0,
-  "protocol": 0,
+  "protocol": 0, // 协议版本
+  "title": "", // 服务器标题
+  "map": "", // 服务器地图
+  "game": "", // 服务器游戏
+  "players": "0/0", // <在线人数>/<最大人数>
+  "bots": 0, // 机器人
+  "server_os": "Windows", // 服务器系统
+  "visibility": false, // 可见性
+  "vac": false, // VAC
+  "version": "", // 服务器版本
+  "port": 0, // 端口（可能不存在）
+  "game_id": "", // 游戏 ID（可能不存在）
   "success": true
 }
 ```
