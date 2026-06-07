@@ -42,8 +42,8 @@ false ;
 
 ```json
 {
-  "data":"<结果>",
-  "success":true
+  "success":true,
+  "data":"<结果>"
 }
 ```
 
@@ -51,9 +51,9 @@ false ;
 
 ```json
 {
+  "success":false,
   "error":"<错误类型>",
-  "data":"<错误描述>", 
-  "success":false
+  "data":"<错误描述>"
 }
 ```
 
@@ -62,19 +62,21 @@ false ;
 - 成功时返回：
 
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <api>
-    <data>结果</data>
-    <success>1</success>
+  <success>true</success>
+  <data>结果</data>
 </api>
 ```
 
 - 错误时返回：
 
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <api>
-    <error>错误类型</error>
-    <data>错误描述</data>
-    <success/>
+  <success>false</success>
+  <error>错误类型</error>
+  <data>错误描述</data>
 </api>
 ```
 
@@ -86,6 +88,8 @@ false ;
 
 ```http request :no-line-numbers :no-line-numbers
 GET https://api.tasaed.top/
+###
+GET https://api.tasaed.top/status
 ```
 
 在使用之前，请先请求以确保API可用性。
@@ -122,8 +126,8 @@ GET https://api.tasaed.top/time/
   - `7` 为新加坡时间。
   - `8` 为乌鲁木齐时间。
   - `9` 为毫秒时间戳。
-  - `10` 为自主输入时区，[PHP 时区列表](https://www.php.net/manual/zh/timezones.php)。
-- `timezone`: 为时区，只在 `type=10` 时有效。
+  - `10` 为自主输入时区，参考 IANA 时区列表。
+- `timezone`: 为 IANA 时区，只在 `type=10` 时有效。
 
 #### 返回
 
@@ -152,7 +156,41 @@ GET https://api.tasaed.top/hash/
 
 - `content`: 内容。
 - `type`: 可为：
-  - `sha256`, `sha512`, `sha3-256`, `crc32`, `md5`, `sha1`, `xxh3`, `md2`, `md4`, `gost`, `crc32b`, `crc32c`, `ripemd160`, `whirlpool`, `gostcrypto`, `ripemd256`, `murmur3a`, `murmur3f`, `sha`, `sha3`, `md`, `xxh`, `ripemd`, `murmur3`。
+  - `md2`
+  - `md4`
+  - `md5|md`
+  - `sha1`
+  - `sha224`
+  - `sha256|sha|sha2`
+  - `sha384`
+  - `sha512`
+  - `sha3-224`
+  - `sha3-256|sha3`
+  - `sha3-384`
+  - `sha3-512`
+  - `sm3`
+  - `ripemd160|ripemd`
+  - `ripemd256`
+  - `ripemd320`
+  - `whirlpool`
+  - `xxh3|xxh3-64`
+  - `xxh3-128`
+  - `crc32`
+  - `crc32b`
+  - `crc32c`
+  - `gost`
+  - `gostcrypto|gost-crypto`
+  - `murmur3a|murmur3-32`
+  - `murmur3f|murmur3-64`
+  - `fsb256|fsb`
+  - `fsb384`
+  - `fsb512`
+  - `streebog256|streebog`
+  - `streebog512`
+  - `groestl224|groestl`
+  - `groestl256`
+  - `groestl384`
+  - `groestl512`
 - `binary`: 为 `1` 时输出 Base64 格式。
 
 ::: warning
@@ -170,6 +208,8 @@ Base64编码或解码。
 
 ```http request :no-line-numbers
 GET https://api.tasaed.top/base/
+###
+GET https://api.tasaed.top/base64/
 ```
 
 #### 参数
@@ -178,8 +218,11 @@ GET https://api.tasaed.top/base/
 
 - `value`: 内容。
 - `type`:
-  - `0` 为编码。
-  - `1` 为解码。
+  - `0` 为 Base64 标准编码。
+  - `1` 为 Base64 容忍填充错误解码。
+  - `2` 为 Base64 URL_SAFE 编码。
+  - `3` 为 Base64 URL_SAFE 解码。
+  - `4` 为 Base64 标准解码。
 
 #### 示例
 
@@ -194,6 +237,8 @@ GET https://api.tasaed.top/base/
 
 ```http request :no-line-numbers
 GET https://api.tasaed.top/rand/
+###
+GET https://api.tasaed.top/random/
 ```
 
 #### 参数
@@ -203,13 +248,15 @@ GET https://api.tasaed.top/rand/
 - `min`: 最小数。
 - `max`: 最大数。
 - `type`:
-  - `0` 为使用梅森旋转（Mersenne Twister）随机数生成器。
-  - `1` 为使用默认生成器。
-  - 不指定或指定错误将默认使用加密安全、均匀分布的生成器。
+  - `1` 为使用默认 ThreadRng 生成器。
+  - `2` 为使用 ChaCha20 生成器。
+  - `3` 为使用 Xoshiro256++ 生成器。
+  - `4` 为使用随机浮点数生成器，保留 6 位小数。
+  - 不指定或指定错误将默认使用 ThreadRng 生成器。
 
 #### 返回
 
-成功时 `data` 返回 `int` 类型。
+成功时 `data` 返回 `int` 类型，`type` 为 `4` 返回 `float` 类型。
 
 #### 示例
 
