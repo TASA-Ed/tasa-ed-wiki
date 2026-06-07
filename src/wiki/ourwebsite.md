@@ -37,19 +37,26 @@ link="https://docs-mf.tasaed.top"
 target="_blank"
 />
 
+<LinkCard
+title="站点：凛冬 玩家社区"
+description="站点：凛冬 游戏 玩家社区。"
+link="https://tte.tasaed.top"
+target="_blank"
+/>
+
 ### 公开服务
 
 目前我们拥有以下三个公开服务：
 
 <LinkCard
-title="TASA-Ed PHP-API"
-description="TASA-Ed工作室提供的PHP-API。"
+title="TASA-Ed RUST-API"
+description="TASA-Ed工作室提供的 RUST-API。"
 link="/wiki/api.html"
 />
 
 ### 非公开服务&网站
 
-目前我们拥有两个非公开服务&网站仅供工作室内部使用。
+目前我们拥有三个非公开服务&网站仅供工作室内部使用。
 
 ---
 

@@ -16,7 +16,7 @@ TASA-Ed 百科仍在完善内容中！
 关于我们和我们的人员。
 
 <LinkCard
-title="TASA-Ed工作室"
+title="TASA-Ed 工作室"
 description="关于我们。"
 link="/wiki/tasaed.html"
 />
@@ -29,29 +29,29 @@ link="/wiki/ccd2s.html"
 
 ## 百科 - 项目
 
-关于TASA-Ed工作室所制作的项目的百科。
+关于 TASA-Ed 工作室所制作的项目的百科。
 
 <LinkCard
 title="SCP 2.5D(或SE)"
-description="TASA-Ed工作室的第一个作品（项目）。"
+description="TASA-Ed 工作室的第一个作品（项目）。"
 link="/wiki/scp25d.html"
 />
 
 <LinkCard
 title="SCP游戏助手"
-description="TASA-Ed工作室的一款应用。"
+description="TASA-Ed 工作室的一款应用。"
 link="/wiki/sgas.html"
 />
 
 <LinkCard
-title="TASA-Ed PHP-API"
-description="TASA-Ed工作室提供的PHP-API。"
+title="TASA-Ed RUST-API"
+description="TASA-Ed 工作室提供的 RUST-API。"
 link="/wiki/api.html"
 />
 
 <LinkCard
 title="TASA-Ed网站"
-description="泛指TASA-Ed工作室的所有网站。"
+description="泛指 TASA-Ed 工作室的所有网站。"
 link="/wiki/ourwebsite.html"
 />
 
