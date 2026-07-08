@@ -11,5 +11,11 @@ export default sidebar({
             children: "structure",
             expanded: true
         },
+        {
+            text: "RUST-API",
+            icon: "plug",
+            prefix: "api/",
+            link: "api/README.md"
+        }
     ],
 });

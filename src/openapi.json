@@ -1,0 +1,88 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "TASA-Ed RUST-API",
+    "version": "2.0.0",
+    "description": "::: important\n近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。\n:::\n\nTASA-Ed 工作室提供的 RUST-API"
+  },
+  "servers": [
+    {
+      "url": "https://api.tasaed.top",
+      "description": "生产环境"
+    }
+  ],
+  "paths": {
+    "/": {
+      "$ref": "#/components/pathItems/Status"
+    },
+    "/status": {
+      "$ref": "#/components/pathItems/Status"
+    }
+  },
+  "components": {
+    "pathItems": {
+      "Status": {
+        "get": {
+          "summary": "获取可用性",
+          "description": "获取 API 当前可用性。在使用之前，建议先请求以确保 API 可用性。",
+          "parameters": [
+            {
+              "$ref": "#/components/parameters/Format"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "API 可用",
+              "content": {
+                "text/html": {
+                  "schema": {
+                    "type": "string",
+                    "enum": ["true"]
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "type": "object",
+                    "xml": {
+                      "name": "api"
+                    },
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "description": "可用性"
+                      }
+                    }
+                  }
+                },
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "success": {
+                        "type": "boolean",
+                        "description": "可用性"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "Format": {
+        "in": "query",
+        "name": "format",
+        "description": "输出格式，默认 `text` (文本格式)",
+        "required": false,
+        "schema": {
+          "type": "string",
+          "default": "text",
+          "enum": ["text", "xml", "json"]
+        }
+      }
+    }
+  }
+}

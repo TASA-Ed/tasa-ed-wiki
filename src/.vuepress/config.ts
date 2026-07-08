@@ -3,6 +3,7 @@ import { removePwaPlugin } from '@vuepress/plugin-remove-pwa'
 
 import theme from "./theme.js";
 import { llmsPlugin } from '@vuepress/plugin-llms'
+import { openapiGeneratorPlugin } from './plugins/openapi-generator.js'
 
 export default defineUserConfig({
     base: "/",
@@ -22,6 +23,11 @@ export default defineUserConfig({
         }),
         removePwaPlugin({
             swLocation: 'service-worker.js',
+        }),
+        openapiGeneratorPlugin({
+            openapiPath: 'openapi.json',
+            outputDir: 'api',
+            baseRoute: '/api'
         }),
     ]
 });
