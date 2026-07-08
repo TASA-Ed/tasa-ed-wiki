@@ -3,7 +3,7 @@
   "info": {
     "title": "TASA-Ed RUST-API",
     "version": "2.0.0",
-    "description": "::: important\n近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。\n:::\n\nTASA-Ed 工作室提供的 RUST-API"
+    "description": "::: important\n近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。\n:::\n\n::: important\n使用小驼峰命名的 API 在 V2 被废弃，请使用连字符。\n:::\n\nTASA-Ed 工作室提供的 RUST-API"
   },
   "servers": [
     {

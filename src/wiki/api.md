@@ -10,6 +10,10 @@ order: 6
 近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。
 :::
 
+::: important
+使用小驼峰命名的 API 在 V2 被废弃，请使用连字符。
+:::
+
 TASA-Ed 工作室提供的 RUST-API
 
 ## 返回格式
@@ -435,13 +439,9 @@ GET https://api.tasaed.top/get/bingtoday/
 获取 Minecraft 服务器信息。仅支持 Java 1.7+。
 
 ```http request :no-line-numbers
-GET https://api.tasaed.top/get/minecraftServer/
-###
 GET https://api.tasaed.top/get/minecraft-server/
 ###
 GET https://api.tasaed.top/get/mc-server/
-###
-GET https://api.tasaed.top/get/mcServer/
 ```
 
 #### 参数
@@ -478,13 +478,9 @@ GET https://api.tasaed.top/get/mcServer/
 使用 [A2S](https://developer.valvesoftware.com/wiki/Server_queries) 协议获取起源游戏服务器信息。
 
 ```http request :no-line-numbers
-GET https://api.tasaed.top/get/a2sServer/
-###
 GET https://api.tasaed.top/get/a2s-server/
 ###
 GET https://api.tasaed.top/get/sl-server/
-###
-GET https://api.tasaed.top/get/slServer/
 ```
 
 ::: caution
