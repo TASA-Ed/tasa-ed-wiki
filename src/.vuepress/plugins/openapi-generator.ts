@@ -165,9 +165,9 @@ function generateIndexPage(
   spec: OpenAPISpec,
   paths: string[]
 ): string {
-  let markdown = `---\ntitle: ${spec.info.title}\n---\n\n`;
+  let markdown = `---\ntitle: ${spec?.info?.title}\n---\n\n`;
 
-  markdown += `# ${spec.info.title}\n\n`;
+  markdown += `# ${spec?.info?.title}\n\n`;
 
   if (spec.info) {
     if (spec.info.title) {
