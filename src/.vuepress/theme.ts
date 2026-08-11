@@ -79,7 +79,7 @@ export default hopeTheme({
 
     meilisearch: {
       host: "https://api.tasaed.top/search",
-      apiKey: "5c27ff5c25b3c6201c40dc9967a7280ae342589da217b8236a81a624d5a8ae43",
+      apiKey: "754e6c4a44e7a664362e945e34ca7085babc5f0d996a99989046b7e66e56db10",
       indexUid: "vuepress_wiki",
     },
 
