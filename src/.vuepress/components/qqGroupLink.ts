@@ -11,7 +11,7 @@ export default defineComponent({
         { class: "vp-nav-item vp-action" },
         h("a", {
           class: "vp-action-link",
-          href: "https://qm.qq.com/q/k56JZfUihG",
+          href: "https://qm.qq.com/q/nC2N5Y1UX0",
           target: "_blank",
           rel: "noopener noreferrer",
           "aria-label": "qq",

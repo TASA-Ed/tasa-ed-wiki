@@ -124,7 +124,7 @@ target="_blank"
 <LinkCard
 title="QQ 群"
 description="TASA-Ed工作室用户&开发交流群"
-link="https://qm.qq.com/q/od7wxNv7YA"
+link="https://qm.qq.com/q/nC2N5Y1UX0"
 target="_blank"
 />
 
