@@ -4,8 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { dereference } from '@scalar/openapi-parser';
-import { createMarkdownFromOpenApi } from '@scalar/openapi-to-markdown';
-import type { HttpMethod } from '@scalar/openapi-to-markdown';
+import { Liquid } from 'liquidjs';
+import { OpenAPIV3_1 } from "openapi-types";
 
 export interface OpenAPIGeneratorOptions {
   /**
@@ -22,15 +22,52 @@ export interface OpenAPIGeneratorOptions {
   baseRoute?: string;
 }
 
-interface OpenAPISpec {
-  openapi?: string;
-  info?: {
-    title?: string;
-    version?: string;
-    description?: string;
-  };
-  paths?: Record<string, Record<string, any>>;
-}
+type OpenAPIMethods = `${OpenAPIV3_1.HttpMethods}`;
+
+const operationTemplate = `## {{ summary }}
+
+{{ description }}
+
+{% if query.size > 0 %}### Query
+
+{% for parameter in query %}
+#### \`{{ parameter.name }}\` <span style="color: #64666f;">{{ parameter.schema.type }}</span>{% if parameter.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ parameter.required }}</span>{% endif %}
+
+{{ parameter.description }}
+
+{% if parameter.default != blank %}- 默认：\`{{ parameter.default }}\`
+{% endif %}{% if parameter.example != blank %}- 示例：\`{{ parameter.example }}\`
+{% endif %}{% if parameter.enum != blank %}- 枚举：{% for item in parameter.enum %}\`{{ item }}\` {% endfor %}
+
+{% endif %}{% endfor %}{% endif %}---
+
+### Responses
+{% for response in responses %}
+#### {% if response.status <= 299 %}<span style="color: oklch(72.3% 0.219 149.579);">{{ response.status }}</span>{% elsif response.status <= 399 %}<span style="color: oklch(62.3% 0.214 259.815);">{{ response.status }}</span>{% elsif response.status <= 599 %}<span style="color: oklch(64.5% 0.246 16.439);">{{ response.status }}</span>{% else %}{{ response.status }}{% endif %}
+
+{{ response.description }}
+
+##### Body
+
+{% for body in response.bodies %}
+
+###### {{ body.mediaType }}
+
+{% if body.primitive %}
+<span style="color: #64666f;">{{ body.schema.type }}</span>
+{% else %}
+{% for property in body.properties %}- \`{{ property.name }}\` <span style="color: #64666f;">{{ property.schema.type }}</span> <span style="color: oklch(63.7% 0.237 25.331);">{{ property.required }}</span>
+{% endfor %}
+{% endif %}
+---
+
+\`\`\`{{ body.syntax }}
+{{ body.example }}
+\`\`\`
+{% endfor %}
+{% endfor %}`;
+
+const liquid = new Liquid({ strictVariables: false });
 
 export const openapiGeneratorPlugin = (
   options: OpenAPIGeneratorOptions = {}
@@ -64,7 +101,7 @@ export const openapiGeneratorPlugin = (
           return;
         }
 
-        const openapiSpec: OpenAPISpec = result.schema as OpenAPISpec;
+        const openapiSpec: OpenAPIV3_1.Document = result.schema as OpenAPIV3_1.Document;
 
         if (!openapiSpec.paths) {
           console.warn('[openapi-generator] No paths found in OpenAPI spec');
@@ -75,24 +112,15 @@ export const openapiGeneratorPlugin = (
         const paths = Object.keys(openapiSpec.paths);
         console.log(`[openapi-generator] Creating pages for ${paths.length} API paths...`);
 
-        // 将解引用后的规范转换为字符串，供 @scalar/openapi-to-markdown 使用
-        const dereferencedContent = JSON.stringify(openapiSpec);
-
         let pageCount = 0;
         for (const apiPath of paths) {
           const pathItem = openapiSpec.paths[apiPath];
-          const methods = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'];
+          const methods: OpenAPIMethods[] = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'];
 
           for (const method of methods) {
-            if (!pathItem[method]) continue;
+            if (!pathItem?.[method]) continue;
 
-            // 使用 @scalar/openapi-to-markdown 生成 markdown
-            const markdown = await createMarkdownFromOpenApi(dereferencedContent, {
-              operation: {
-                path: apiPath,
-                method: method.toUpperCase() as HttpMethod,
-              },
-            });
+            const markdown = await renderOperationMarkdown(pathItem[method]);
 
             // 生成文件名
             const fileName = pathToFileName(apiPath, method);
@@ -101,15 +129,7 @@ export const openapiGeneratorPlugin = (
             // 使用 createPage API 创建页面
             const apiPage = await createPage(app, {
               path: pagePath,
-              content: markdown
-                .substring(markdown.indexOf("## Operations"))
-                .replace("## Operations", "## 操作")
-                .replace("#### Parameters", "#### 参数")
-                .replace("#### Responses", "#### 响应")
-                .replace("##### Status:", "##### 状态码:")
-                .replace(/\*\*Example:\*\*/g, "**示例:**")
-                .replace(/possible values:/g, "可用值:")
-                .replace(/default:/g, "默认:"),
+              content: markdown,
               frontmatter: {
                 title: `${method.toUpperCase()} ${apiPath}`,
               },
@@ -141,6 +161,105 @@ export const openapiGeneratorPlugin = (
   };
 };
 
+async function renderOperationMarkdown(operation: OpenAPIV3_1.OperationObject): Promise<string> {
+  const query = (operation.parameters ?? [])
+    .filter((parameter: OpenAPIV3_1.ParameterObject | OpenAPIV3_1.ReferenceObject) => 'in' in parameter)
+    .map((parameter) => {
+      const schema = parameter.schema as OpenAPIV3_1.NonArraySchemaObject;
+      const oneOf = schema.oneOf as OpenAPIV3_1.NonArraySchemaObject[];
+      return {
+        name: parameter.name ?? "",
+        schema: normalizeSchema(parameter.schema as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject),
+        required: parameter.required ? "必填" : "可选",
+        description: parameter.description ?? "",
+        default: schema?.default,
+        example: parameter.example ?? schema?.example,
+        enum: oneOf?.[0]?.enum ?? schema?.enum
+      };
+    });
+
+
+  const responses = Object.entries(operation.responses ?? {}).map(([status, response]) => ({
+    status,
+    description: response?.description ?? '',
+    bodies: Object.entries((response as OpenAPIV3_1.ResponseObject)?.content ?? {}).map(([mediaType, media]) =>
+      createResponseBody(mediaType, media?.schema as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject)
+    ),
+  }));
+
+  return liquid.parseAndRender(operationTemplate, {
+    summary: operation.summary ?? operation.operationId ?? '',
+    description: operation.description ?? '',
+    query,
+    responses,
+  });
+}
+
+function createResponseBody(mediaType: string, schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject) {
+  const normalizedSchema = normalizeSchema(schema);
+  const primitive = normalizedSchema.type !== 'object' || !normalizedSchema.properties;
+  const properties = Object.entries(normalizedSchema.properties ?? {}).map(([name, property]) => ({
+    name,
+    schema: normalizeSchema(property as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject),
+    required: normalizedSchema.required?.includes(name) ? '必填' : '可选',
+  }));
+
+  return {
+    mediaType,
+    schema: normalizedSchema,
+    primitive,
+    properties,
+    syntax: mediaType === 'application/xml' ? 'xml' : mediaType === 'text/html' ? 'html' : 'json',
+    example: primitive
+      ? normalizedSchema.type ?? 'string'
+      : createExample(normalizedSchema, mediaType),
+  };
+}
+
+function normalizeSchema(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject): OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject {
+  if (!schema) return { type: 'string' };
+  if (schema.type === "array") return { ...schema, type: "array" };
+  if (schema.type) return schema;
+  if (schema.properties) return { ...schema, type: 'object' };
+  if (schema.oneOf) return { ...schema, type: (schema?.oneOf?.[0] as OpenAPIV3_1.NonArraySchemaObject)?.type ?? 'object' };
+  return { ...schema, type: 'object' };
+}
+
+function createExample(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject, mediaType: string): string {
+  const value = Object.fromEntries(
+    Object.entries(schema.properties ?? {}).map(([name, property]) => [
+      name,
+      exampleValue(normalizeSchema(property as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject)),
+    ])
+  );
+
+  if (mediaType === 'application/xml') {
+    const name = schema?.xml?.name ?? "root";
+    return `<${name}>\n${Object.entries(value).map(([name, item]) => `  <${name}>${item}</${name}>`).join('\n')}\n</${name}>`;
+  }
+
+  return JSON.stringify(value, null, 2);
+}
+
+function exampleValue(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject): unknown {
+  if (schema.example !== undefined) return schema.example;
+  if (schema.default !== undefined) return schema.default;
+  if (schema.type === 'object') return createExampleValue(schema);
+  if (schema.type === 'array') return [exampleValue(normalizeSchema(schema.items as OpenAPIV3_1.NonArraySchemaObject | OpenAPIV3_1.ArraySchemaObject))];
+  if (schema.type === 'integer' || schema.type === 'number') return 0;
+  if (schema.type === 'boolean') return true;
+  return 'string';
+}
+
+function createExampleValue(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject): Record<string, unknown> {
+  return Object.fromEntries(
+    Object.entries(schema.properties ?? {}).map(([name, property]) => [
+      name,
+      exampleValue(normalizeSchema(property as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject)),
+    ])
+  );
+}
+
 /**
  * 将 API 路径转换为文件名
  */
@@ -162,22 +281,28 @@ function pathToFileName(apiPath: string, method?: string): string {
  * 生成索引页面
  */
 function generateIndexPage(
-  spec: OpenAPISpec,
+  spec: OpenAPIV3_1.Document,
   paths: string[]
 ): string {
-  let markdown = `---\ntitle: ${spec?.info?.title}\n---\n\n`;
-
-  markdown += `# ${spec?.info?.title}\n\n`;
+  let markdown = `---\nicon: plug\ntitle: ${spec?.info?.title}\ndescription: TASA-Ed 工作室提供的 RUST-API\nisOriginal: true\n---\n\n`;
 
   if (spec.info) {
-    if (spec.info.title) {
-      markdown += `**${spec.info.title}**\n\n`;
+    if (spec.info.description) {
+      markdown += `${spec.info.description}\n\n`;
     }
     if (spec.info.version) {
       markdown += `版本: ${spec.info.version}\n\n`;
     }
-    if (spec.info.description) {
-      markdown += `${spec.info.description}\n\n`;
+    if (spec.info?.license?.name) {
+      markdown += `许可证: ${spec.info?.license?.name}\n\n`;
+    }
+  }
+
+  if (spec.servers) {
+    markdown += `## 服务器列表\n\n`;
+    for (const server of spec.servers) {
+      markdown += `${server.description}\n\n`;
+      markdown += `\`\`\`text :no-line-numbers\n${server.url}\n\`\`\`\n\n`;
     }
   }
 
@@ -186,8 +311,10 @@ function generateIndexPage(
   // 按路径排序
   const sortedPaths = [...paths].sort();
 
+  const taggedPaths: Record<string, string> = {};
+
   for (const apiPath of sortedPaths) {
-    const pathItem = spec.paths![apiPath];
+    const pathItem = spec.paths![apiPath] as OpenAPIV3_1.PathItemObject;
 
     // 获取该路径的所有方法
     const methods = Object.keys(pathItem)
@@ -195,17 +322,38 @@ function generateIndexPage(
 
     // 为每个方法创建链接
     for (const method of methods) {
-      const operation = pathItem[method];
+      const operation = pathItem[method as OpenAPIMethods];
       const fileName = pathToFileName(apiPath, method);
       const summary = operation?.summary || '';
       const methodUpper = method.toUpperCase();
 
-      markdown += `- [\`${methodUpper} ${apiPath}\`](${fileName}.html)`;
-      if (summary) {
-        markdown += ` - ${summary}`;
+      if (operation?.tags) for (const tagName of operation?.tags) {
+        if(!taggedPaths[tagName]) taggedPaths[tagName] = "";
+        taggedPaths[tagName] += `- [\`${methodUpper} ${apiPath}\`](${fileName}.html)`;
+        if (summary) {
+          taggedPaths[tagName] += ` - ${summary}`;
+        }
+        taggedPaths[tagName] += `\n`;
+      } else {
+        if(!taggedPaths.__untagged) taggedPaths.__untagged = "";
+        taggedPaths.__untagged += `- [\`${methodUpper} ${apiPath}\`](${fileName}.html)`;
+        if (summary) {
+          taggedPaths.__untagged += ` - ${summary}`;
+        }
+        taggedPaths.__untagged += `\n`;
       }
-      markdown += `\n`;
     }
+  }
+
+  if (spec.tags) for (const tag of spec.tags) {
+    markdown += `### ${tag.description ?? tag.name}\n\n`;
+    markdown += taggedPaths[tag.name] ?? "无";
+    markdown += "\n\n";
+  }
+
+  if (taggedPaths.__untagged) {
+    markdown += `### 无标签\n\n`;
+    markdown += taggedPaths.__untagged;
   }
 
   return markdown;

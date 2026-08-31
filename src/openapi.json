@@ -1,9 +1,12 @@
 {
-  "openapi": "3.1.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "TASA-Ed RUST-API",
-    "version": "2.0.0",
-    "description": "::: important\n近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。\n:::\n\n::: important\n使用小驼峰命名的 API 在 V2 被废弃，请使用连字符。\n:::\n\nTASA-Ed 工作室提供的 RUST-API"
+    "description": "::: important\n近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。\n:::\n\n::: important\n使用小驼峰命名的 API 在 V2 被废弃，请使用连字符。\n:::\n\nTASA-Ed 工作室提供的 RUST-API",
+    "license": {
+      "name": "Proprietary"
+    },
+    "version": "2.4.0"
   },
   "servers": [
     {
@@ -12,58 +15,107 @@
     }
   ],
   "paths": {
-    "/": {
-      "$ref": "#/components/pathItems/Status"
-    },
-    "/status": {
-      "$ref": "#/components/pathItems/Status"
-    }
-  },
-  "components": {
-    "pathItems": {
-      "Status": {
-        "get": {
-          "summary": "获取可用性",
-          "description": "获取 API 当前可用性。在使用之前，建议先请求以确保 API 可用性。",
-          "parameters": [
-            {
-              "$ref": "#/components/parameters/Format"
+    "/v2/base64": {
+      "get": {
+        "tags": [
+          "TextProcessing"
+        ],
+        "summary": "Base64",
+        "description": "Base64 编码或解码",
+        "operationId": "get_base",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "0: 标准编码 | 1: 标准解码（容忍填充错误） | 2: `URL_SAFE` 编码 | 3: `URL_SAFE` 解码 | 4: 标准解码",
+            "required": true,
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/BaseType"
+                }
+              ],
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Hello"
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Base64 编码或解码后的数据。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "API 可用",
-              "content": {
-                "text/html": {
-                  "schema": {
-                    "type": "string",
-                    "enum": ["true"]
-                  }
-                },
-                "application/xml": {
-                  "schema": {
-                    "type": "object",
-                    "xml": {
-                      "name": "api"
-                    },
-                    "properties": {
-                      "success": {
-                        "type": "boolean",
-                        "description": "可用性"
-                      }
-                    }
-                  }
-                },
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "success": {
-                        "type": "boolean",
-                        "description": "可用性"
-                      }
-                    }
-                  }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "解码错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -71,18 +123,653 @@
         }
       }
     },
-    "parameters": {
-      "Format": {
-        "in": "query",
-        "name": "format",
-        "description": "输出格式，默认 `text` (文本格式)",
-        "required": false,
-        "schema": {
-          "type": "string",
-          "default": "text",
-          "enum": ["text", "xml", "json"]
+    "/v2/hash": {
+      "get": {
+        "tags": [
+          "TextProcessing"
+        ],
+        "summary": "哈希",
+        "description": "Hash|哈希|散列 值计算",
+        "operationId": "get_hash",
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Hello"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "哈希类型",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/HashType"
+            },
+            "example": "md5"
+          },
+          {
+            "name": "binary",
+            "in": "query",
+            "description": "为 1 时以 base64 输出（将哈希的二进制格式转为 base64）",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0,
+              "maximum": 1,
+              "minimum": 0
+            },
+            "example": 1
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "哈希值。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/ip": {
+      "get": {
+        "tags": [
+          "Get"
+        ],
+        "summary": "获取 IP",
+        "description": "获取客户端 IP 地址",
+        "operationId": "get_ip",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "IP 数据。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/output": {
+      "get": {
+        "tags": [
+          "Get"
+        ],
+        "summary": "输出文本",
+        "description": "将输入的文本再输出",
+        "operationId": "get_ot",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "ot",
+            "in": "query",
+            "description": "与 output 二选一，要输出的文本",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Hello"
+          },
+          {
+            "name": "output",
+            "in": "query",
+            "description": "与 ot 二选一，要输出的文本",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Hello"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "输出文本",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/random-word": {
+      "get": {
+        "tags": [
+          "Get"
+        ],
+        "summary": "获取随机诗词",
+        "description": "获取一个随机诗词",
+        "operationId": "get_rw",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "随机诗词。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/status": {
+      "get": {
+        "tags": [
+          "API"
+        ],
+        "summary": "获取状态",
+        "description": "获取 API 状态",
+        "operationId": "get_status",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "API 可用。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseStatus"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseStatus"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "API 不可用。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseStatus"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseStatus"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/time": {
+      "get": {
+        "tags": [
+          "Time"
+        ],
+        "summary": "获取时间",
+        "description": "获取当前时间",
+        "operationId": "get_time",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "1: 中国时区 | 2: 秒级时间戳 | 3: 格林威治时间 | 4: 协调世界时 | 5: 上海时间 | 6: 纽约时间 | 7: 新加坡时间 | 8: 乌鲁木齐时间 | 9: 毫秒级时间戳 | 10: 自定义时区，需填写 timezone 参数",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/TimeType"
+            },
+            "example": 1
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "timezone",
+            "in": "query",
+            "description": "在 type 为 10 时需要",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "Asia/Tokyo"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "时间。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/user-agent": {
+      "get": {
+        "tags": [
+          "Get"
+        ],
+        "summary": "获取 UA",
+        "description": "获取客户端 UA",
+        "operationId": "get_ua",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User Agent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
         }
       }
     }
-  }
+  },
+  "components": {
+    "schemas": {
+      "BaseType": {
+        "type": "integer",
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "HashType": {
+        "type": "string",
+        "enum": [
+          "md2",
+          "md4",
+          "md5",
+          "sha1",
+          "sha224",
+          "sha256",
+          "sha384",
+          "sha512",
+          "sha3-224",
+          "sha3-256",
+          "sha3-384",
+          "sha3-512",
+          "sm3",
+          "ripemd160",
+          "ripemd256",
+          "ripemd320",
+          "whirlpool",
+          "xxh3-64",
+          "xxh3-128",
+          "crc32",
+          "crc32b",
+          "crc32c",
+          "gost",
+          "gost-crypto",
+          "murmur3a",
+          "murmur3f",
+          "fsb256",
+          "fsb384",
+          "fsb512",
+          "streebog256",
+          "streebog512",
+          "groestl224",
+          "groestl256",
+          "groestl384",
+          "groestl512"
+        ]
+      },
+      "JsonResponseError": {
+        "type": "object",
+        "required": [
+          "success",
+          "error",
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "JsonResponseStatus": {
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "JsonResponseSuccess": {
+        "type": "object",
+        "required": [
+          "success",
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TimeType": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "XmlResponseError": {
+        "type": "object",
+        "required": [
+          "success",
+          "error",
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "error": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "xml": {
+          "name": "api"
+        }
+      },
+      "XmlResponseStatus": {
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        }
+      },
+      "XmlResponseSuccess": {
+        "type": "object",
+        "required": [
+          "success",
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "xml": {
+          "name": "api"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Time",
+      "description": "时间相关"
+    },
+    {
+      "name": "API",
+      "description": "API 相关"
+    },
+    {
+      "name": "Get",
+      "description": "获取相关"
+    },
+    {
+      "name": "TextProcessing",
+      "description": "文本处理"
+    }
+  ]
 }
