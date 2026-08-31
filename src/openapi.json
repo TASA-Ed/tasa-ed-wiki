@@ -30,12 +30,7 @@
             "description": "0: 标准编码 | 1: 标准解码（容忍填充错误） | 2: `URL_SAFE` 编码 | 3: `URL_SAFE` 解码 | 4: 标准解码",
             "required": true,
             "schema": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/BaseType"
-                }
-              ],
-              "default": 0
+              "$ref": "#/components/schemas/BaseType"
             },
             "example": 0
           },

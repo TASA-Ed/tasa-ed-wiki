@@ -1,11 +1,10 @@
 import type { Plugin } from 'vuepress';
-import { createPage } from 'vuepress/core'
+import { createPage } from 'vuepress/core';
 import { readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { dereference } from '@scalar/openapi-parser';
 import { Liquid } from 'liquidjs';
-import { OpenAPIV3_1 } from "openapi-types";
+import { OpenAPIV3_1 } from 'openapi-types';
 
 export interface OpenAPIGeneratorOptions {
   /**
@@ -23,8 +22,19 @@ export interface OpenAPIGeneratorOptions {
 }
 
 type OpenAPIMethods = `${OpenAPIV3_1.HttpMethods}`;
+type Schema = OpenAPIV3_1.SchemaObject;
 
-const operationTemplate = `## {{ summary }}
+const HTTP_METHODS: OpenAPIMethods[] = [
+  'get', 'post', 'put', 'patch', 'delete', 'options', 'head', 'trace',
+];
+
+const operationTemplate = `---
+icon: server
+isOriginal: true
+description: {{ description }}
+---
+
+## {{ summary }}
 
 {{ description }}
 
@@ -43,7 +53,7 @@ const operationTemplate = `## {{ summary }}
 
 ### Responses
 {% for response in responses %}
-#### {% if response.status <= 299 %}<span style="color: oklch(72.3% 0.219 149.579);">{{ response.status }}</span>{% elsif response.status <= 399 %}<span style="color: oklch(62.3% 0.214 259.815);">{{ response.status }}</span>{% elsif response.status <= 599 %}<span style="color: oklch(64.5% 0.246 16.439);">{{ response.status }}</span>{% else %}{{ response.status }}{% endif %}
+#### {% if response.statusCode and response.statusCode <= 299 %}<span style="color: oklch(72.3% 0.219 149.579);">{{ response.status }}</span>{% elsif response.statusCode and response.statusCode <= 399 %}<span style="color: oklch(62.3% 0.214 259.815);">{{ response.status }}</span>{% elsif response.statusCode and response.statusCode <= 599 %}<span style="color: oklch(64.5% 0.246 16.439);">{{ response.status }}</span>{% else %}{{ response.status }}{% endif %}
 
 {{ response.description }}
 
@@ -74,8 +84,10 @@ export const openapiGeneratorPlugin = (
 ): Plugin => {
   const {
     openapiPath = 'openapi.json',
-    outputDir = 'api'
+    outputDir = 'api',
+    baseRoute = `/${outputDir}`,
   } = options;
+  const route = normalizeRoute(baseRoute);
 
   return {
     name: 'vuepress-plugin-openapi-generator',
@@ -83,25 +95,17 @@ export const openapiGeneratorPlugin = (
     onInitialized: async (app) => {
       const openapiFullPath = resolve(app.dir.source(), openapiPath);
 
-      // 检查 openapi.json 是否存在
-      if (!existsSync(openapiFullPath)) {
-        app.env.isDebug && console.warn(
-          `[openapi-generator] OpenAPI file not found: ${openapiFullPath}`
-        );
-        return;
-      }
-
       try {
         // 读取并解析 OpenAPI 规范（包括解引用 $ref）
         const openapiContent = await readFile(openapiFullPath, 'utf8');
         const result = dereference(openapiContent);
 
-        if (!result.version) {
+        if (!result.version || !result.schema) {
           console.error('[openapi-generator] Invalid OpenAPI spec:', result.errors);
           return;
         }
 
-        const openapiSpec: OpenAPIV3_1.Document = result.schema as OpenAPIV3_1.Document;
+        const openapiSpec = result.schema as unknown as OpenAPIV3_1.Document;
 
         if (!openapiSpec.paths) {
           console.warn('[openapi-generator] No paths found in OpenAPI spec');
@@ -115,16 +119,15 @@ export const openapiGeneratorPlugin = (
         let pageCount = 0;
         for (const apiPath of paths) {
           const pathItem = openapiSpec.paths[apiPath];
-          const methods: OpenAPIMethods[] = ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'];
 
-          for (const method of methods) {
+          for (const method of HTTP_METHODS) {
             if (!pathItem?.[method]) continue;
 
             const markdown = await renderOperationMarkdown(pathItem[method]);
 
             // 生成文件名
             const fileName = pathToFileName(apiPath, method);
-            const pagePath = `/${outputDir}/${fileName}.html`;
+            const pagePath = `${route}/${fileName}.html`;
 
             // 使用 createPage API 创建页面
             const apiPage = await createPage(app, {
@@ -143,16 +146,13 @@ export const openapiGeneratorPlugin = (
         // 创建索引页面
         const indexMarkdown = generateIndexPage(openapiSpec, paths);
         const indexPage = await createPage(app, {
-          path: `/${outputDir}/`,
-          content: indexMarkdown,
-          frontmatter: {
-            title: 'API 文档',
-          },
+          path: `${route}/`,
+          content: indexMarkdown
         });
 
         app.pages.push(indexPage);
         console.log(
-          `[openapi-generator] Created ${pageCount} API documentation pages in /${outputDir}/`
+          `[openapi-generator] Created ${pageCount} API documentation pages in ${route}/`
         );
       } catch (error) {
         console.error('[openapi-generator] Error generating API docs:', error);
@@ -163,27 +163,31 @@ export const openapiGeneratorPlugin = (
 
 async function renderOperationMarkdown(operation: OpenAPIV3_1.OperationObject): Promise<string> {
   const query = (operation.parameters ?? [])
-    .filter((parameter: OpenAPIV3_1.ParameterObject | OpenAPIV3_1.ReferenceObject) => 'in' in parameter)
+    .filter((parameter): parameter is OpenAPIV3_1.ParameterObject =>
+      'in' in parameter && parameter.in === 'query'
+    )
     .map((parameter) => {
-      const schema = parameter.schema as OpenAPIV3_1.NonArraySchemaObject;
-      const oneOf = schema.oneOf as OpenAPIV3_1.NonArraySchemaObject[];
+      const schema = normalizeSchema(parameter.schema);
       return {
-        name: parameter.name ?? "",
-        schema: normalizeSchema(parameter.schema as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject),
-        required: parameter.required ? "必填" : "可选",
-        description: parameter.description ?? "",
-        default: schema?.default,
+        name: parameter.name,
+        schema,
+        required: parameter.required ? '必填' : '可选',
+        description: parameter.description ?? '',
+        default: schema.default,
         example: parameter.example ?? schema?.example,
-        enum: oneOf?.[0]?.enum ?? schema?.enum
+        enum: schema.enum,
       };
     });
 
 
   const responses = Object.entries(operation.responses ?? {}).map(([status, response]) => ({
+    statusCode: /^\d{3}$/.test(status) ? Number(status) : undefined,
     status,
     description: response?.description ?? '',
-    bodies: Object.entries((response as OpenAPIV3_1.ResponseObject)?.content ?? {}).map(([mediaType, media]) =>
-      createResponseBody(mediaType, media?.schema as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject)
+    bodies: Object.entries(
+      response && 'content' in response ? response.content ?? {} : {}
+    ).map(([mediaType, media]) =>
+      createResponseBody(mediaType, media?.schema)
     ),
   }));
 
@@ -195,12 +199,12 @@ async function renderOperationMarkdown(operation: OpenAPIV3_1.OperationObject): 
   });
 }
 
-function createResponseBody(mediaType: string, schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject) {
+function createResponseBody(mediaType: string, schema?: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject) {
   const normalizedSchema = normalizeSchema(schema);
   const primitive = normalizedSchema.type !== 'object' || !normalizedSchema.properties;
   const properties = Object.entries(normalizedSchema.properties ?? {}).map(([name, property]) => ({
     name,
-    schema: normalizeSchema(property as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject),
+    schema: normalizeSchema(property),
     required: normalizedSchema.required?.includes(name) ? '必填' : '可选',
   }));
 
@@ -216,20 +220,22 @@ function createResponseBody(mediaType: string, schema: OpenAPIV3_1.ArraySchemaOb
   };
 }
 
-function normalizeSchema(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject): OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject {
-  if (!schema) return { type: 'string' };
-  if (schema.type === "array") return { ...schema, type: "array" };
+function normalizeSchema(schema?: Schema | OpenAPIV3_1.ReferenceObject): Schema {
+  if (!schema || '$ref' in schema) return { type: 'string' };
+  if (schema.type === 'array') return schema;
   if (schema.type) return schema;
   if (schema.properties) return { ...schema, type: 'object' };
-  if (schema.oneOf) return { ...schema, type: (schema?.oneOf?.[0] as OpenAPIV3_1.NonArraySchemaObject)?.type ?? 'object' };
+  if (schema.oneOf?.[0] && !('$ref' in schema.oneOf[0])) {
+    return { ...schema, type: normalizeSchema(schema.oneOf[0]).type as OpenAPIV3_1.NonArraySchemaObjectType };
+  }
   return { ...schema, type: 'object' };
 }
 
-function createExample(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject, mediaType: string): string {
+function createExample(schema: Schema, mediaType: string): string {
   const value = Object.fromEntries(
     Object.entries(schema.properties ?? {}).map(([name, property]) => [
       name,
-      exampleValue(normalizeSchema(property as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject)),
+      exampleValue(normalizeSchema(property)),
     ])
   );
 
@@ -241,21 +247,21 @@ function createExample(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonAr
   return JSON.stringify(value, null, 2);
 }
 
-function exampleValue(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject): unknown {
+function exampleValue(schema: Schema): unknown {
   if (schema.example !== undefined) return schema.example;
   if (schema.default !== undefined) return schema.default;
   if (schema.type === 'object') return createExampleValue(schema);
-  if (schema.type === 'array') return [exampleValue(normalizeSchema(schema.items as OpenAPIV3_1.NonArraySchemaObject | OpenAPIV3_1.ArraySchemaObject))];
+  if (schema.type === 'array') return [exampleValue(normalizeSchema(schema.items))];
   if (schema.type === 'integer' || schema.type === 'number') return 0;
   if (schema.type === 'boolean') return true;
   return 'string';
 }
 
-function createExampleValue(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject): Record<string, unknown> {
+function createExampleValue(schema: Schema): Record<string, unknown> {
   return Object.fromEntries(
     Object.entries(schema.properties ?? {}).map(([name, property]) => [
       name,
-      exampleValue(normalizeSchema(property as OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.NonArraySchemaObject)),
+      exampleValue(normalizeSchema(property)),
     ])
   );
 }
@@ -264,7 +270,7 @@ function createExampleValue(schema: OpenAPIV3_1.ArraySchemaObject | OpenAPIV3_1.
  * 将 API 路径转换为文件名
  */
 function pathToFileName(apiPath: string, method?: string): string {
-  const name = apiPath.length == 1 ? 'i_root' : apiPath;
+  const name = apiPath.length === 1 ? 'i_root' : apiPath;
   const baseName = name
     .replace(/^\//, '')
     .replace(/\//g, '-')
@@ -272,7 +278,7 @@ function pathToFileName(apiPath: string, method?: string): string {
     .replace(/}/g, '_')
     .replace(/_+/g, '_')
     .replace(/-+/g, '-')
-    .toLowerCase();
+    .toLowerCase() || 'root';
 
   return method ? `${baseName}-${method.toLowerCase()}` : baseName;
 }
@@ -314,28 +320,30 @@ function generateIndexPage(
   const taggedPaths: Record<string, string> = {};
 
   for (const apiPath of sortedPaths) {
-    const pathItem = spec.paths![apiPath] as OpenAPIV3_1.PathItemObject;
+    const pathItem = spec.paths![apiPath];
+    if (!pathItem) continue;
 
     // 获取该路径的所有方法
-    const methods = Object.keys(pathItem)
-      .filter(key => ['get', 'post', 'put', 'patch', 'delete', 'options', 'head'].includes(key));
+    const methods = HTTP_METHODS.filter((method) => pathItem[method]);
 
     // 为每个方法创建链接
     for (const method of methods) {
-      const operation = pathItem[method as OpenAPIMethods];
+      const operation = pathItem[method];
       const fileName = pathToFileName(apiPath, method);
       const summary = operation?.summary || '';
       const methodUpper = method.toUpperCase();
 
-      if (operation?.tags) for (const tagName of operation?.tags) {
-        if(!taggedPaths[tagName]) taggedPaths[tagName] = "";
-        taggedPaths[tagName] += `- [\`${methodUpper} ${apiPath}\`](${fileName}.html)`;
-        if (summary) {
-          taggedPaths[tagName] += ` - ${summary}`;
+      if (operation?.tags?.length) {
+        for (const tagName of operation.tags) {
+          if (!taggedPaths[tagName]) taggedPaths[tagName] = '';
+          taggedPaths[tagName] += `- [\`${methodUpper} ${apiPath}\`](${fileName}.html)`;
+          if (summary) {
+            taggedPaths[tagName] += ` - ${summary}`;
+          }
+          taggedPaths[tagName] += '\n';
         }
-        taggedPaths[tagName] += `\n`;
       } else {
-        if(!taggedPaths.__untagged) taggedPaths.__untagged = "";
+        if (!taggedPaths.__untagged) taggedPaths.__untagged = '';
         taggedPaths.__untagged += `- [\`${methodUpper} ${apiPath}\`](${fileName}.html)`;
         if (summary) {
           taggedPaths.__untagged += ` - ${summary}`;
@@ -357,4 +365,9 @@ function generateIndexPage(
   }
 
   return markdown;
+}
+
+function normalizeRoute(route: string): string {
+  const normalized = `/${route}`.replace(/\\+/g, '/').replace(/\/+/g, '/');
+  return normalized.length > 1 ? normalized.replace(/\/$/, '') : normalized;
 }

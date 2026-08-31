@@ -12,7 +12,7 @@ export default sidebar({
             expanded: true
         },
         {
-            text: "RUST-API",
+            text: "TASA-Ed RUST-API",
             icon: "plug",
             prefix: "api/",
             link: "api/README.md"
