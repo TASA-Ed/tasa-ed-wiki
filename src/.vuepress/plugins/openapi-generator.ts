@@ -49,6 +49,17 @@ description: {{ description }}
 {% endif %}{% if parameter.example != blank %}- 示例：\`{{ parameter.example }}\`
 {% endif %}{% if parameter.enum != blank %}- 枚举：{% for item in parameter.enum %}\`{{ item }}\` {% endfor %}
 
+{% endif %}{% endfor %}{% endif %}{% if headers.size > 0 %}### Headers
+
+{% for parameter in headers %}
+#### \`{{ parameter.name }}\` <span style="color: #64666f;">{{ parameter.schema.type }}</span>{% if parameter.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ parameter.required }}</span>{% endif %}
+
+{{ parameter.description }}
+
+{% if parameter.default != blank %}- 默认：\`{{ parameter.default }}\`
+{% endif %}{% if parameter.example != blank %}- 示例：\`{{ parameter.example }}\`
+{% endif %}{% if parameter.enum != blank %}- 枚举：{% for item in parameter.enum %}\`{{ item }}\` {% endfor %}
+
 {% endif %}{% endfor %}{% endif %}---
 
 ### Responses
@@ -57,6 +68,18 @@ description: {{ description }}
 
 {{ response.description }}
 
+{% if response.headers.size > 0 %}##### Headers
+
+{% for header in response.headers %}
+###### \`{{ header.name }}\` <span style="color: #64666f;">{{ header.schema.type }}</span>{% if header.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ header.required }}</span>{% endif %}
+
+{{ header.description }}
+
+{% if header.default != blank %}- 默认：\`{{ header.default }}\`
+{% endif %}{% if header.example != blank %}- 示例：\`{{ header.example }}\`
+{% endif %}{% if header.enum != blank %}- 枚举：{% for item in header.enum %}\`{{ item }}\` {% endfor %}
+
+{% endif %}{% endfor %}{% endif %}
 ##### Body
 
 {% for body in response.bodies %}
@@ -66,7 +89,7 @@ description: {{ description }}
 {% if body.primitive %}
 <span style="color: #64666f;">{{ body.schema.type }}</span>
 {% else %}
-{% for property in body.properties %}- \`{{ property.name }}\` <span style="color: #64666f;">{{ property.schema.type }}</span> <span style="color: oklch(63.7% 0.237 25.331);">{{ property.required }}</span>
+{% for property in body.properties %}- \`{{ property.name }}\` <span style="color: #64666f;">{{ property.schema.type }}</span>{% if property.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ property.required }}</span>{% endif %}
 {% endfor %}
 {% endif %}
 ---
@@ -123,7 +146,7 @@ export const openapiGeneratorPlugin = (
           for (const method of HTTP_METHODS) {
             if (!pathItem?.[method]) continue;
 
-            const markdown = await renderOperationMarkdown(pathItem[method]);
+            const markdown = await renderOperationMarkdown(pathItem[method], pathItem.parameters);
 
             // 生成文件名
             const fileName = pathToFileName(apiPath, method);
@@ -161,29 +184,33 @@ export const openapiGeneratorPlugin = (
   };
 };
 
-async function renderOperationMarkdown(operation: OpenAPIV3_1.OperationObject): Promise<string> {
-  const query = (operation.parameters ?? [])
-    .filter((parameter): parameter is OpenAPIV3_1.ParameterObject =>
-      'in' in parameter && parameter.in === 'query'
-    )
-    .map((parameter) => {
-      const schema = normalizeSchema(parameter.schema);
-      return {
-        name: parameter.name,
-        schema,
-        required: parameter.required ? '必填' : '可选',
-        description: parameter.description ?? '',
-        default: schema.default,
-        example: parameter.example ?? schema?.example,
-        enum: schema.enum,
-      };
-    });
-
+async function renderOperationMarkdown(
+  operation: OpenAPIV3_1.OperationObject,
+  pathParameters: OpenAPIV3_1.PathItemObject['parameters']
+): Promise<string> {
+  const inheritedParameters = (pathParameters ?? []).filter(
+    (parameter): parameter is OpenAPIV3_1.ParameterObject => 'in' in parameter
+  );
+  const operationParameters = (operation.parameters ?? []).filter(
+    (parameter): parameter is OpenAPIV3_1.ParameterObject => 'in' in parameter
+  );
+  const parameters = [
+    ...inheritedParameters.filter((parameter) => !operationParameters.some(
+      (override) => override.name === parameter.name && override.in === parameter.in
+    )),
+    ...operationParameters,
+  ];
+  const query = parameters.filter((parameter) => parameter.in === 'query').map(formatParameter);
+  const headers = parameters.filter((parameter) => parameter.in === 'header').map(formatParameter);
 
   const responses = Object.entries(operation.responses ?? {}).map(([status, response]) => ({
     statusCode: /^\d{3}$/.test(status) ? Number(status) : undefined,
     status,
     description: response?.description ?? '',
+    headers: Object.entries(
+      response && 'headers' in response ? response.headers ?? {} : {}
+    ).filter((entry): entry is [string, OpenAPIV3_1.HeaderObject] => !('$ref' in entry[1]))
+      .map(([name, header]) => formatParameter({ ...header, name, in: 'header' })),
     bodies: Object.entries(
       response && 'content' in response ? response.content ?? {} : {}
     ).map(([mediaType, media]) =>
@@ -195,8 +222,22 @@ async function renderOperationMarkdown(operation: OpenAPIV3_1.OperationObject): 
     summary: operation.summary ?? operation.operationId ?? '',
     description: operation.description ?? '',
     query,
+    headers,
     responses,
   });
+}
+
+function formatParameter(parameter: OpenAPIV3_1.ParameterObject) {
+  const schema = normalizeSchema(parameter.schema);
+  return {
+    name: parameter.name,
+    schema,
+    required: parameter.required ? '必填' : '可选',
+    description: parameter.description ?? '',
+    default: schema.default,
+    example: parameter.example ?? schema.example,
+    enum: schema.enum,
+  };
 }
 
 function createResponseBody(mediaType: string, schema?: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject) {
@@ -253,7 +294,7 @@ function exampleValue(schema: Schema): unknown {
   if (schema.type === 'object') return createExampleValue(schema);
   if (schema.type === 'array') return [exampleValue(normalizeSchema(schema.items))];
   if (schema.type === 'integer' || schema.type === 'number') return 0;
-  if (schema.type === 'boolean') return true;
+  if (schema.type === 'boolean') return schema?.enum?.[0] ?? true;
   return 'string';
 }
 

@@ -1,12 +1,12 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.2.0",
   "info": {
     "title": "TASA-Ed RUST-API",
-    "description": "::: important\n近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**，文档正在撰写中。\n:::\n\n::: important\n使用小驼峰命名的 API 在 V2 被废弃，请使用连字符。\n:::\n\nTASA-Ed 工作室提供的 RUST-API",
+    "description": "::: important\n近期 api.tasaed.top 已经切换到了 rust 写的 api 上，可能会有问题，如果你遇到**请及时反馈**。文档已完善，你还可以阅读本 API 的 [Redoc](https://api.tasaed.top/openapi/redoc)。\n:::\n\nTASA-Ed 工作室提供的 RUST-API",
     "license": {
       "name": "Proprietary"
     },
-    "version": "2.4.0"
+    "version": "2.7.1"
   },
   "servers": [
     {
@@ -15,6 +15,549 @@
     }
   ],
   "paths": {
+    "/get/v2/a2s-server": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "A2S 获取服务器信息",
+        "description": "使用 [A2S](https://developer.valvesoftware.com/wiki/Server_queries) 协议获取起源游戏服务器信息，需要 UDP 请求，可能被屏蔽。",
+        "operationId": "get_a2s_server",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "输出格式，默认为 `json`，可选值为 `json`、`xml`",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "json"
+            },
+            "example": "json"
+          },
+          {
+            "name": "port",
+            "in": "query",
+            "description": "端口号，默认为 `27015`",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 27015,
+              "minimum": 0
+            },
+            "example": 27015
+          },
+          {
+            "name": "hostname",
+            "in": "query",
+            "description": "主机名，必填",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "example.com"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "服务器信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "hostname 错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "获取服务器信息失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "获取服务器信息超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/A2sServerInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get/v2/ani-bg": {
+      "get": {
+        "tags": [
+          "Get"
+        ],
+        "summary": "获取二次元背景",
+        "description": "获取二次元随机背景图",
+        "operationId": "get_ani_bg",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "支持 json(application/json) text(text/plain) xml(application/xml) jump(302 跳转)，默认 jump",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "jump"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "背景图地址",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "跳转至背景图",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "图片地址"
+              }
+            }
+          },
+          "502": {
+            "description": "获取背景图失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get/v2/bingtoday": {
+      "get": {
+        "tags": [
+          "Get"
+        ],
+        "summary": "获取 Bing 每日图片",
+        "description": "获取 Bing 每日壁纸，按上海时区每日缓存图片地址。默认以 302 跳转至图片，也可返回图片地址。",
+        "operationId": "get_bing_today",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "图片分辨率，省略或为空时使用 1920x1080。推荐使用分辨率，兼容旧关键词别名。",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/BingType",
+              "default": "1920x1080"
+            },
+            "example": "1920x1080"
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "description": "支持 json(application/json) text(text/plain) xml(application/xml) jump(302 跳转)，默认 jump",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "jump"
+            },
+            "example": "json"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "图片地址",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "跳转至图片",
+            "headers": {
+              "Location": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "图片地址"
+              }
+            }
+          },
+          "400": {
+            "description": "分辨率类型错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "请求 Bing Wallpaper API 失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get/v2/minecraft-server": {
+      "get": {
+        "tags": [
+          "Game"
+        ],
+        "summary": "获取 MC 服务器信息",
+        "description": "获取 Minecraft 服务器信息。仅支持 Java 1.7+。",
+        "operationId": "get_minecraft_server",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "description": "输出格式，默认为 `json`，可选值为 `json`、`xml`",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "json"
+            },
+            "example": "json"
+          },
+          {
+            "name": "port",
+            "in": "query",
+            "description": "端口号，默认为 `25565`",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 25565,
+              "minimum": 0
+            },
+            "example": 25565
+          },
+          {
+            "name": "hostname",
+            "in": "query",
+            "description": "主机名，必填",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "example.com"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "服务器信息",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "hostname 错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "获取服务器信息失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              }
+            }
+          },
+          "504": {
+            "description": "获取服务器信息超时",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/MinecraftServerInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/get/v2/steamid": {
+      "get": {
+        "tags": [
+          "TextProcessing"
+        ],
+        "summary": "Steam ID 格式转换",
+        "description": "将指定格式的 SteamID 转换为 Steam3、Steam64、Steam2 或账户 ID。input_type 必须显式指定，不支持自动识别或以 account_id 作为输入类型。",
+        "operationId": "get_steamid",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "input",
+            "in": "query",
+            "description": "待转换的 SteamID，格式必须与 `input_type` 一致",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "76561197960265729"
+          },
+          {
+            "name": "output_type",
+            "in": "query",
+            "description": "输出类型",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SteamIdOutputType"
+            },
+            "example": "account_id"
+          },
+          {
+            "name": "input_type",
+            "in": "query",
+            "description": "输入类型，必须显式指定，不自动识别，不支持 `account_id`",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SteamIdInputType"
+            },
+            "example": "steam64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "转换后的 SteamID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "输入内容为空、输入/输出类型缺失或不支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "SteamID 格式错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v2/base64": {
       "get": {
         "tags": [
@@ -68,7 +611,7 @@
                   "$ref": "#/components/schemas/XmlResponseSuccess"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -88,7 +631,7 @@
                   "$ref": "#/components/schemas/XmlResponseError"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -108,7 +651,121 @@
                   "$ref": "#/components/schemas/XmlResponseError"
                 }
               },
-              "text/html": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/color-convert": {
+      "get": {
+        "tags": [
+          "TextProcessing"
+        ],
+        "summary": "颜色转换",
+        "description": "在 HEX、RGB、CMY、CMYK、HSV、HSL 之间转换颜色。转换以 8 位 RGB 为中间表示，可能产生舍入误差。HEX 输出为带 # 前缀的大写六位颜色码；其他类型以英文逗号分隔通道，RGB 输出整数，H 保留两位小数，其余浮点通道最多保留四位小数。",
+        "operationId": "get_color",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "value",
+            "in": "query",
+            "description": "颜色值，各通道以英文逗号分隔。HEX 支持 3 位或 6 位，可带 # 前缀；\nRGB 通道为 0~255 的整数；CMY/CMYK 通道为 0~1；\nHSV/HSL 的 H 为 0~360，其余通道为 0~1。",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "#FF5733"
+          },
+          {
+            "name": "input_type",
+            "in": "query",
+            "description": "输入颜色类型",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ColorType"
+            },
+            "example": "hex"
+          },
+          {
+            "name": "output_type",
+            "in": "query",
+            "description": "输出颜色类型",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ColorType"
+            },
+            "example": "rgb"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "转换后的颜色值",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误：颜色值为空，或输入/输出类型缺失或不支持",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "颜色值解析或转换失败",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -185,7 +842,7 @@
                   "$ref": "#/components/schemas/XmlResponseSuccess"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -205,7 +862,27 @@
                   "$ref": "#/components/schemas/XmlResponseError"
                 }
               },
-              "text/html": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "生成错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -227,7 +904,7 @@
           {
             "name": "format",
             "in": "query",
-            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "description": "支持 json(application/json) text(text/plain) xml(application/xml)，默认 text",
             "required": false,
             "schema": {
               "type": "string",
@@ -250,7 +927,7 @@
                   "$ref": "#/components/schemas/XmlResponseSuccess"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -314,7 +991,7 @@
                   "$ref": "#/components/schemas/XmlResponseSuccess"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -334,7 +1011,360 @@
                   "$ref": "#/components/schemas/XmlResponseError"
                 }
               },
-              "text/html": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/pinyin": {
+      "get": {
+        "tags": [
+          "TextProcessing"
+        ],
+        "summary": "中文转拼音",
+        "description": "将任意中文转为拼音。",
+        "operationId": "get_pinyin",
+        "parameters": [
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "content",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "你好"
+          },
+          {
+            "name": "join",
+            "in": "query",
+            "description": "为连接拼音的字符串，不填写则为空字符串，填写sp将会转为空格",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": ""
+            },
+            "example": "sp"
+          },
+          {
+            "name": "tonestyle",
+            "in": "query",
+            "description": "拼音样式; `symbol`: 声调符号，例如 pīn yīn | `none`: 不输出拼音声调，例如 pin yin | `number`: 末尾数字模式的拼音，例如 pin1 yin1",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "symbol"
+            },
+            "example": "none"
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "description": "1: 普通句子转拼音 | 2: 在转为拼音的同时保留所有非汉字字符 | 3: 将首字作为姓氏转换 | 4: 转换为用于链接的拼音字符串 | 5: 转换为只保留首字符的字符串 | 6: 转换为只保留首字符字符串的同时保留原字符串的英文单词 | 7: 转换为姓名首字母的字符串",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PinyinType"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "拼音。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "连接符错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/random": {
+      "get": {
+        "tags": [
+          "Generate"
+        ],
+        "summary": "生成随机数",
+        "description": "生成一个随机数",
+        "operationId": "get_rand",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "1: `ThreadRng` | 2: `ChaCha20` | 3: `Xoshiro256++` | 4: 随机浮点数",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/RandType"
+            },
+            "example": 1
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "min",
+            "in": "query",
+            "description": "最小值 `int64`",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "max",
+            "in": "query",
+            "description": "最大值 `int64`",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 100
+            },
+            "example": 100
+          },
+          {
+            "name": "seed",
+            "in": "query",
+            "description": "随机数种子。注意：指定后随机数将确定性、非安全。",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            },
+            "example": 42
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "随机数。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "类型错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/random-string/": {
+      "get": {
+        "tags": [
+          "Generate"
+        ],
+        "summary": "生成随机字符串",
+        "description": "生成一个随机字符串",
+        "operationId": "get_rand_string",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "1: `SampleString`（默认，可传 length） | 2: 自定义字符集（可传 char，可传 length）",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/RandStringType"
+            },
+            "example": 1
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "char",
+            "in": "query",
+            "description": "字符集（type 为 2 时可选）",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "abcdefghijklmnopqrstuvwxyz1234567890"
+            },
+            "example": "abcdefg"
+          },
+          {
+            "name": "length",
+            "in": "query",
+            "description": "随机字符串长度",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "maximum": 255,
+              "minimum": 1
+            },
+            "example": 16
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "随机字符串。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "类型错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -356,7 +1386,7 @@
           {
             "name": "format",
             "in": "query",
-            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "description": "支持 json(application/json) text(text/plain) xml(application/xml)，默认 text",
             "required": false,
             "schema": {
               "type": "string",
@@ -379,7 +1409,27 @@
                   "$ref": "#/components/schemas/XmlResponseSuccess"
                 }
               },
-              "text/html": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "读取失败。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -401,7 +1451,7 @@
           {
             "name": "format",
             "in": "query",
-            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "description": "支持 json(application/json) text(text/plain) xml(application/xml)，默认 text",
             "required": false,
             "schema": {
               "type": "string",
@@ -424,7 +1474,7 @@
                   "$ref": "#/components/schemas/XmlResponseStatus"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -444,7 +1494,7 @@
                   "$ref": "#/components/schemas/XmlResponseStatus"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -486,7 +1536,7 @@
           {
             "name": "timezone",
             "in": "query",
-            "description": "在 type 为 10 时需要",
+            "description": "在 type 为 10 时需要，支持 IANA 名称（Asia/Tokyo）、固定偏移（+08:00）和 POSIX 时区（EST5EDT,M3.2.0,M11.1.0）",
             "required": false,
             "schema": {
               "type": "string"
@@ -508,7 +1558,7 @@
                   "$ref": "#/components/schemas/XmlResponseSuccess"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -528,7 +1578,93 @@
                   "$ref": "#/components/schemas/XmlResponseError"
                 }
               },
-              "text/html": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/ulid": {
+      "get": {
+        "tags": [
+          "Generate"
+        ],
+        "summary": "生成 ULID",
+        "description": "生成通用唯一按字典排序的标识符（ULID）",
+        "operationId": "get_ulid",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "description": "0: 使用当前时间生成 | 1: 使用 timestamp 指定的时间生成",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UlidType"
+            },
+            "example": 0
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "text"
+            },
+            "example": "json"
+          },
+          {
+            "name": "timestamp",
+            "in": "query",
+            "description": "在 type 为 1 时需要，支持秒或毫秒时间戳",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0
+            },
+            "example": 1700000000
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "ULID。",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseSuccess"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseSuccess"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "参数错误",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JsonResponseError"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/XmlResponseError"
+                }
+              },
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -550,7 +1686,7 @@
           {
             "name": "format",
             "in": "query",
-            "description": "支持 json(application/json) text(text/html) xml(application/xml)，默认 text",
+            "description": "支持 json(application/json) text(text/plain) xml(application/xml)，默认 text",
             "required": false,
             "schema": {
               "type": "string",
@@ -573,7 +1709,7 @@
                   "$ref": "#/components/schemas/XmlResponseSuccess"
                 }
               },
-              "text/html": {
+              "text/plain": {
                 "schema": {
                   "type": "string"
                 }
@@ -586,6 +1722,114 @@
   },
   "components": {
     "schemas": {
+      "A2sServerInfoResponse": {
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "bots": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "description": "Bot 数量",
+            "minimum": 0
+          },
+          "data": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "错误信息，`success` 为 `false` 时存在"
+          },
+          "game": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "游戏名称"
+          },
+          "game_id": {
+            "type": "integer",
+            "format": "int64",
+            "description": "游戏 ID（可能不存在）",
+            "minimum": 0
+          },
+          "map": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "地图名称"
+          },
+          "players": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "玩家数量 <在线人数>/<最大人数>"
+          },
+          "port": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "description": "端口号（可能不存在）",
+            "minimum": 0
+          },
+          "protocol": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "description": "协议版本",
+            "minimum": 0
+          },
+          "server_os": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "服务器操作系统"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "成功标志，`true` 表示成功，`false` 表示失败"
+          },
+          "title": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "服务器标题"
+          },
+          "vac": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "是否开启 VAC 保护"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "游戏版本"
+          },
+          "visibility": {
+            "type": [
+              "boolean",
+              "null"
+            ],
+            "description": "服务器可见性"
+          }
+        }
+      },
       "BaseType": {
         "type": "integer",
         "enum": [
@@ -594,6 +1838,43 @@
           2,
           3,
           4
+        ]
+      },
+      "BingType": {
+        "type": "string",
+        "enum": [
+          "3840x2160",
+          "1920x1200",
+          "1920x1080",
+          "1080x1920",
+          "1366x768",
+          "768x1366",
+          "1280x768",
+          "768x1280",
+          "1280x720",
+          "720x1280",
+          "1024x768",
+          "768x1024",
+          "800x600",
+          "800x480",
+          "480x800",
+          "640x480",
+          "480x640",
+          "240x400",
+          "400x240",
+          "240x320",
+          "320x240"
+        ]
+      },
+      "ColorType": {
+        "type": "string",
+        "enum": [
+          "hex",
+          "rgb",
+          "cmy",
+          "cmyk",
+          "hsv",
+          "hsl"
         ]
       },
       "HashType": {
@@ -607,22 +1888,22 @@
           "sha256",
           "sha384",
           "sha512",
-          "sha3-224",
-          "sha3-256",
-          "sha3-384",
-          "sha3-512",
+          "sha3_224",
+          "sha3_256",
+          "sha3_384",
+          "sha3_512",
           "sm3",
           "ripemd160",
           "ripemd256",
           "ripemd320",
           "whirlpool",
-          "xxh3-64",
-          "xxh3-128",
+          "xxh3_64",
+          "xxh3_128",
           "crc32",
           "crc32b",
           "crc32c",
           "gost",
-          "gost-crypto",
+          "gost_crypto",
           "murmur3a",
           "murmur3f",
           "fsb256",
@@ -651,7 +1932,10 @@
             "type": "string"
           },
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "enum": [
+              false
+            ]
           }
         }
       },
@@ -662,7 +1946,10 @@
         ],
         "properties": {
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "enum": [
+              true
+            ]
           }
         }
       },
@@ -677,9 +1964,115 @@
             "type": "string"
           },
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "enum": [
+              true
+            ]
           }
         }
+      },
+      "MinecraftServerInfoResponse": {
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "data": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "错误信息，`success` 为 `false` 时存在"
+          },
+          "list": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
+            "description": "玩家列表，每个元素为玩家的名称 `[\"<玩家名称>\"]`"
+          },
+          "players": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "服务器玩家数 <在线人数>/<最大人数>"
+          },
+          "protocol": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "description": "服务器协议版本"
+          },
+          "success": {
+            "type": "boolean",
+            "description": "成功标志，`true` 表示成功，`false` 表示失败"
+          },
+          "text": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "服务器描述"
+          },
+          "version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "服务器版本名"
+          }
+        }
+      },
+      "PinyinType": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "RandStringType": {
+        "type": "integer",
+        "enum": [
+          1,
+          2
+        ]
+      },
+      "RandType": {
+        "type": "integer",
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "SteamIdInputType": {
+        "type": "string",
+        "enum": [
+          "steam3",
+          "steam64",
+          "steam2"
+        ]
+      },
+      "SteamIdOutputType": {
+        "type": "string",
+        "enum": [
+          "steam3",
+          "steam64",
+          "steam2",
+          "account_id"
+        ]
       },
       "TimeType": {
         "type": "integer",
@@ -694,6 +2087,13 @@
           8,
           9,
           10
+        ]
+      },
+      "UlidType": {
+        "type": "integer",
+        "enum": [
+          0,
+          1
         ]
       },
       "XmlResponseError": {
@@ -711,7 +2111,10 @@
             "type": "string"
           },
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "enum": [
+              false
+            ]
           }
         },
         "xml": {
@@ -725,8 +2128,14 @@
         ],
         "properties": {
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "enum": [
+              true
+            ]
           }
+        },
+        "xml": {
+          "name": "api"
         }
       },
       "XmlResponseSuccess": {
@@ -740,7 +2149,10 @@
             "type": "string"
           },
           "success": {
-            "type": "boolean"
+            "type": "boolean",
+            "enum": [
+              true
+            ]
           }
         },
         "xml": {
@@ -751,12 +2163,12 @@
   },
   "tags": [
     {
-      "name": "Time",
-      "description": "时间相关"
-    },
-    {
       "name": "API",
       "description": "API 相关"
+    },
+    {
+      "name": "Time",
+      "description": "时间相关"
     },
     {
       "name": "Get",
@@ -765,6 +2177,14 @@
     {
       "name": "TextProcessing",
       "description": "文本处理"
+    },
+    {
+      "name": "Generate",
+      "description": "生成相关"
+    },
+    {
+      "name": "Game",
+      "description": "游戏相关"
     }
   ]
 }
