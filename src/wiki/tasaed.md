@@ -30,13 +30,13 @@ TASA-Ed 工作室于 2020 年 12 月 20 日 成立，最初的名称是 TASA 工
   <VPCard
     title="德二吹风机（ccD2s）"
     desc="工作室的创立者。"
-    logo="/assets/avatar/ccd2s.webp"
+    logo="/assets/avatar/ccd2s.avif"
     background=var(--vpcard-members)
   />
   <VPCard
     title="DenSonet"
     desc="德二吹风机的好友。"
-    logo="/assets/avatar/densonet.webp"
+    logo="/assets/avatar/densonet.avif"
     background=var(--vpcard-members)
   />
 </div>
