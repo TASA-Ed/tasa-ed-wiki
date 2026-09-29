@@ -1,95 +1,97 @@
-<template>
-  <div class="info-card" @click="handleClick">
-    <div class="card-content">
-      <span class="card-title">{{ title }}</span>
-      <span class="card-divider">|</span>
-      <span class="card-description">{{ description }}</span>
-    </div>
-  </div>
-</template>
+<script setup>
+import { computed } from 'vue'
 
-<script setup lang="ts">
-interface Props {
-  title: string
-  description: string
-  link: string
-  target?: '_blank' | '_self'
-}
-
-const props = withDefaults(defineProps<Props>(), {
-  target: '_self'
+const props = defineProps({
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    default: ''
+  },
+  link: {
+    type: String,
+    required: true
+  },
+  target: {
+    type: String,
+    default: '_blank'
+  }
 })
 
-const handleClick = () => {
-  if (props.target === '_blank') {
-    window.open(props.link, '_blank')
-  } else {
-    window.location.href = props.link
-  }
-}
+// 当 target="_blank" 时自动加上安全属性，防范钓鱼与性能问题
+const relAttr = computed(() => {
+  return props.target === '_blank' ? 'noopener noreferrer' : undefined
+})
 </script>
 
-<style scoped lang="scss">
-.info-card {
-  // 使用 CSS 变量以便在深色模式下切换
-  --card-bg: white;
-  --card-border: #e8e8e8;
-  --card-shadow: rgba(0, 0, 0, 0.1);
-  --card-shadow-hover: rgba(0, 0, 0, 0.15);
-  --title-color: #1890ff;
-  --divider-color: #d9d9d9;
-  --description-color: #8c8c8c;
+<template>
+  <a
+    :href="link"
+    :target="target"
+    :rel="relAttr"
+    class="link-card"
+  >
+    <div class="link-card-content">
+      <div class="link-card-title">{{ title }}</div>
+      <div v-if="description" class="link-card-desc">{{ description }}</div>
+    </div>
+  </a>
+</template>
 
-  background: var(--card-bg);
+<style scoped>
+.link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  padding: 20px 24px;
-  box-shadow: 0 2px 8px var(--card-shadow);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid var(--card-border);
+  text-decoration: none !important;
+  color: inherit;
+  transition: all 0.2s ease-in-out;
+  box-sizing: border-box;
+  gap: 12px;
   margin-bottom: 8px;
+}
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px var(--card-shadow-hover);
-  }
+/* 悬停微动效与浅阴影 */
+.link-card:hover {
+  border-color: #cbd5e1;
+  background-color: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
 
-  .card-content {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
+.link-card:hover .link-card-arrow {
+  transform: translateX(3px);
+  color: #1e293b;
+}
 
-    .card-title {
-      color: var(--title-color);
-      font-size: 16px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
+.link-card-content {
+  flex: 1;
+  min-width: 0;
+}
 
-    .card-divider {
-      color: var(--divider-color);
-      font-size: 14px;
-      font-weight: 300;
-    }
+.link-card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-    .card-description {
-      color: var(--description-color);
-      font-size: 14px;
-      flex: 1;
-      min-width: 200px;
-    }
-  }
-
-  // 深色模式适配
-  [data-theme="dark"] & {
-    --card-bg: #1f1f1f;
-    --card-border: #303030;
-    --card-shadow: rgba(0, 0, 0, 0.3);
-    --card-shadow-hover: rgba(0, 0, 0, 0.5);
-    --title-color: #40a9ff;
-    --divider-color: #434343;
-    --description-color: #a6a6a6;
-  }
+.link-card-desc {
+  margin-top: 4px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 </style>
