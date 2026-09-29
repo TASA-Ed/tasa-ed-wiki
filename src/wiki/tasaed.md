@@ -60,9 +60,23 @@ target="_blank"
 />
 
 <LinkCard
-title="Mi计划"
+title="NanoYunhu"
+description="NanoYunHu，无头云湖。GitHub 页面"
+link="https://github.com/TASA-Ed/nanoyunhu"
+target="_blank"
+/>
+
+<LinkCard
+title="Mi 计划"
 description="一个计划软件。GitHub 页面"
 link="https://github.com/TASA-Ed/iamiplan"
+target="_blank"
+/>
+
+<LinkCard
+title="NodeBB Plugin Timestamp"
+description="NodeBB 在帖子中插入相对时间组件。GitHub 页面"
+link="https://github.com/TASA-Ed/nodebb-plugin-timestamp"
 target="_blank"
 />
 
@@ -70,6 +84,27 @@ target="_blank"
 title="鹰歌游戏引擎国际化插件"
 description="基于鹰歌游戏引擎。GitHub 页面"
 link="https://github.com/TASA-Ed/MakerFrame-Plugins-I18n"
+target="_blank"
+/>
+
+<LinkCard
+title="Age of History Modding Skills"
+description="用于开发《历史时代》系列模组的 AI Skills。GitHub 页面"
+link="https://github.com/TASA-Ed/age-of-history-mod-dev-skills"
+target="_blank"
+/>
+
+<LinkCard
+title="LLM Playing"
+description="让 LLM 游玩《历史时代 2：DE》（Age of History II: Definitive Edition）服务端。GitHub 页面"
+link="https://github.com/TASA-Ed/aoh2de-llm-playing"
+target="_blank"
+/>
+
+<LinkCard
+title="LLM Playing Agent"
+description="让 LLM 游玩《历史时代 2：DE》（Age of History II: Definitive Edition）Agent 端。GitHub 页面"
+link="https://github.com/TASA-Ed/aoh2de-llm-playing-agent"
 target="_blank"
 />
 
@@ -87,27 +122,27 @@ link="https://github.com/TASA-Ed/tasa-ed-wiki"
 target="_blank"
 />
 
-<LinkCard
-title="鹰歌游戏启动器 V2"
-description="用于启动鹰歌游戏（C++）。GitHub 页面"
-link="https://github.com/TASA-Ed/MakerFrameLauncherV2"
-target="_blank"
-/>
-
 ### 其他
 
 <div class="vp-card-container">
-  <VPCard
-    title="SCP 游戏助手"
-    desc="一个整理 SCP 基金会题材游戏资源，教程的软件。于 2022 年停止运营。"
-    logo="/assets/logo/sgas-icon.webp"
-    background=var(--vpcard-members)
-  />
-  <VPCard
-    title="开源 - 计算机制造商"
-    desc="一款经营模拟题材游戏。目前正在开发中。"
-    background=var(--vpcard-members)
-  />
+    <VPCard
+        title="站点：凛冬"
+        desc="《站点：凛冬》是由 NextEpoch 工作室开发的一款多人探索硬核射击游戏。TASA-Ed 工作室负责运营部分。"
+        logo="/assets/logo/sitefrostfall-icon.avif"
+        link="https://store.steampowered.com/app/3629270/_/"
+        background=var(--vpcard-members)
+    />
+    <VPCard
+        title="SCP 游戏助手"
+        desc="一个整理 SCP 基金会题材游戏资源，教程的软件。于 2022 年停止运营。"
+        logo="/assets/logo/sgas-icon.avif"
+        background=var(--vpcard-members)
+    />
+    <VPCard
+        title="开源 - 计算机制造商"
+        desc="一款经营模拟题材游戏。目前正在开发中。"
+        background=var(--vpcard-members)
+    />
 </div>
 
 ## 联系我们
