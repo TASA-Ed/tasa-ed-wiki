@@ -46,28 +46,54 @@ const relAttr = computed(() => {
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
+  background-color: var(--vp-c-bg-elv);
+  border: 1px solid var(--vp-c-border);
   border-radius: 8px;
   text-decoration: none !important;
   color: inherit;
-  transition: all 0.2s ease-in-out;
+  transition:
+    background-color var(--vp-t-color, 0.2s ease),
+    border-color var(--vp-t-color, 0.2s ease),
+    box-shadow var(--vp-t-transform, 0.2s ease),
+    transform var(--vp-t-transform, 0.2s ease);
   box-sizing: border-box;
   gap: 12px;
   margin-bottom: 8px;
+  box-shadow: 0 1px 2px 1px var(--vp-c-shadow);
 }
 
-/* 悬停微动效与浅阴影 */
 .link-card:hover {
-  border-color: #cbd5e1;
-  background-color: #f8fafc;
+  border-color: var(--vp-c-border-hard);
+  background-color: var(--vp-c-bg-elv);
+  background-image: linear-gradient(var(--vp-c-control-hover), var(--vp-c-control-hover));
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px var(--vp-c-shadow);
+}
+
+.link-card:focus-visible {
+  outline: 2px solid var(--vp-c-accent);
+  outline-offset: 2px;
+}
+
+.link-card:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px var(--vp-c-shadow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-card {
+    transition: none;
+  }
+
+  .link-card:hover,
+  .link-card:active {
+    transform: none;
+  }
 }
 
 .link-card:hover .link-card-arrow {
   transform: translateX(3px);
-  color: #1e293b;
+  color: var(--vp-c-text);
 }
 
 .link-card-content {
@@ -78,7 +104,7 @@ const relAttr = computed(() => {
 .link-card-title {
   font-size: 15px;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--vp-c-text);
   line-height: 1.4;
   white-space: nowrap;
   overflow: hidden;
@@ -88,7 +114,7 @@ const relAttr = computed(() => {
 .link-card-desc {
   margin-top: 4px;
   font-size: 13px;
-  color: #64748b;
+  color: var(--vp-c-text-mute);
   line-height: 1.4;
   display: -webkit-box;
   -webkit-box-orient: vertical;
