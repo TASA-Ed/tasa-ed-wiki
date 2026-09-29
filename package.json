@@ -1,7 +1,7 @@
 {
   "name": "tasa-ed-wiki",
   "description": "TASA-Ed Wiki",
-  "version": "1.9.0+20260925",
+  "version": "1.9.1+20260929",
   "license": "CC BY-SA 4.0",
   "type": "module",
   "scripts": {
@@ -11,21 +11,21 @@
     "docs:update-package": "pnpm dlx vp-update"
   },
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.30",
-    "@vuepress/plugin-comment": "2.0.0-rc.130",
-    "@vuepress/plugin-feed": "2.0.0-rc.130",
-    "@vuepress/plugin-llms": "2.0.0-rc.130",
-    "@vuepress/plugin-meilisearch": "2.0.0-rc.130",
-    "@vuepress/plugin-remove-pwa": "2.0.0-rc.130",
-    "markdownlint-cli2": "^0.23.2",
-    "sass-embedded": "^1.103.1",
-    "vue": "^3.5.41",
-    "vuepress": "2.0.0-rc.30",
-    "vuepress-theme-hope": "2.0.0-rc.107"
+    "@vuepress/bundler-vite": "2.0.0-rc.31",
+    "@vuepress/plugin-comment": "2.0.0-rc.135",
+    "@vuepress/plugin-feed": "2.0.0-rc.135",
+    "@vuepress/plugin-llms": "2.0.0-rc.135",
+    "@vuepress/plugin-meilisearch": "2.0.0-rc.135",
+    "@vuepress/plugin-remove-pwa": "2.0.0-rc.135",
+    "markdownlint-cli2": "^0.23.3",
+    "sass-embedded": "^1.105.0",
+    "vue": "^3.5.43",
+    "vuepress": "2.0.0-rc.31",
+    "vuepress-theme-hope": "2.0.0-rc.110"
   },
   "dependencies": {
-    "@scalar/openapi-parser": "^0.28.16",
-    "@waline/client": "^3.15.2",
+    "@scalar/openapi-parser": "^0.29.8",
+    "@waline/client": "^3.16.0",
     "liquidjs": "^10.29.0",
     "openapi-types": "^12.1.3"
   }
