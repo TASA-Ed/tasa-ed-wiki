@@ -41,7 +41,7 @@ description: {{ description }}
 {% if query.size > 0 %}### Query
 
 {% for parameter in query %}
-#### \`{{ parameter.name }}\` <span style="color: #64666f;">{{ parameter.schema.type }}</span>{% if parameter.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ parameter.required }}</span>{% endif %}
+#### \`{{ parameter.name }}\` <span style="color: #64666f;">{{ parameter.schema.type | join: ' | ' }}</span>{% if parameter.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ parameter.required }}</span>{% endif %}
 
 {{ parameter.description }}
 
@@ -52,7 +52,7 @@ description: {{ description }}
 {% endif %}{% endfor %}{% endif %}{% if headers.size > 0 %}### Headers
 
 {% for parameter in headers %}
-#### \`{{ parameter.name }}\` <span style="color: #64666f;">{{ parameter.schema.type }}</span>{% if parameter.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ parameter.required }}</span>{% endif %}
+#### \`{{ parameter.name }}\` <span style="color: #64666f;">{{ parameter.schema.type | join: ' | ' }}</span>{% if parameter.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ parameter.required }}</span>{% endif %}
 
 {{ parameter.description }}
 
@@ -71,7 +71,7 @@ description: {{ description }}
 {% if response.headers.size > 0 %}##### Headers
 
 {% for header in response.headers %}
-###### \`{{ header.name }}\` <span style="color: #64666f;">{{ header.schema.type }}</span>{% if header.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ header.required }}</span>{% endif %}
+###### \`{{ header.name }}\` <span style="color: #64666f;">{{ header.schema.type | join: ' | ' }}</span>{% if header.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ header.required }}</span>{% endif %}
 
 {{ header.description }}
 
@@ -87,9 +87,9 @@ description: {{ description }}
 ###### {{ body.mediaType }}
 
 {% if body.primitive %}
-<span style="color: #64666f;">{{ body.schema.type }}</span>
+<span style="color: #64666f;">{{ body.schema.type | join: ' | ' }}</span>
 {% else %}
-{% for property in body.properties %}- \`{{ property.name }}\` <span style="color: #64666f;">{{ property.schema.type }}</span>{% if property.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ property.required }}</span>{% endif %}
+{% for property in body.properties %}- \`{{ property.name }}\` <span style="color: #64666f;">{{ property.schema.type | join: ' | ' }}</span>{% if property.required != "可选" %} <span style="color: oklch(63.7% 0.237 25.331);">{{ property.required }}</span>{% endif %}
 {% endfor %}
 {% endif %}
 ---
@@ -242,7 +242,8 @@ function formatParameter(parameter: OpenAPIV3_1.ParameterObject) {
 
 function createResponseBody(mediaType: string, schema?: OpenAPIV3_1.SchemaObject | OpenAPIV3_1.ReferenceObject) {
   const normalizedSchema = normalizeSchema(schema);
-  const primitive = normalizedSchema.type !== 'object' || !normalizedSchema.properties;
+  const type = exampleType(normalizedSchema);
+  const primitive = type !== 'object' || !normalizedSchema.properties;
   const properties = Object.entries(normalizedSchema.properties ?? {}).map(([name, property]) => ({
     name,
     schema: normalizeSchema(property),
@@ -256,7 +257,7 @@ function createResponseBody(mediaType: string, schema?: OpenAPIV3_1.SchemaObject
     properties,
     syntax: mediaType === 'application/xml' ? 'xml' : mediaType === 'text/html' ? 'html' : 'json',
     example: primitive
-      ? normalizedSchema.type ?? 'string'
+      ? type === 'array' ? JSON.stringify(exampleValue(normalizedSchema), null, 2) : type ?? 'string'
       : createExample(normalizedSchema, mediaType),
   };
 }
@@ -288,13 +289,20 @@ function createExample(schema: Schema, mediaType: string): string {
   return JSON.stringify(value, null, 2);
 }
 
+function exampleType(schema: Schema) {
+  return Array.isArray(schema.type)
+    ? schema.type.find((type) => type !== 'null') ?? 'null'
+    : schema.type;
+}
+
 function exampleValue(schema: Schema): unknown {
   if (schema.example !== undefined) return schema.example;
   if (schema.default !== undefined) return schema.default;
-  if (schema.type === 'object') return createExampleValue(schema);
-  if (schema.type === 'array') return [exampleValue(normalizeSchema(schema.items))];
-  if (schema.type === 'integer' || schema.type === 'number') return 0;
-  if (schema.type === 'boolean') return schema?.enum?.[0] ?? true;
+  const type = exampleType(schema);
+  if (type === 'object') return createExampleValue(schema);
+  if (type === 'array') return [exampleValue(normalizeSchema((schema as OpenAPIV3_1.ArraySchemaObject).items))];
+  if (type === 'integer' || type === 'number') return 0;
+  if (type === 'boolean') return schema?.enum?.[0] ?? true;
   return 'string';
 }
 
