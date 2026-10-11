@@ -18,15 +18,15 @@
     "@vuepress/plugin-meilisearch": "2.0.0-rc.135",
     "@vuepress/plugin-remove-pwa": "2.0.0-rc.135",
     "markdownlint-cli2": "^0.23.3",
-    "sass-embedded": "^1.105.0",
+    "sass-embedded": "^1.105.1",
     "vue": "^3.5.43",
     "vuepress": "2.0.0-rc.31",
     "vuepress-theme-hope": "2.0.0-rc.110"
   },
   "dependencies": {
-    "@scalar/openapi-parser": "^0.29.8",
+    "@scalar/openapi-parser": "^0.29.12",
     "@waline/client": "^3.16.0",
-    "liquidjs": "^10.29.0",
+    "liquidjs": "^10.30.0",
     "openapi-types": "^12.1.3"
   }
 }
