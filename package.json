@@ -11,22 +11,22 @@
     "docs:update-package": "pnpm dlx vp-update"
   },
   "devDependencies": {
-    "@vuepress/bundler-vite": "2.0.0-rc.31",
-    "@vuepress/plugin-comment": "2.0.0-rc.137",
-    "@vuepress/plugin-feed": "2.0.0-rc.137",
-    "@vuepress/plugin-llms": "2.0.0-rc.137",
-    "@vuepress/plugin-meilisearch": "2.0.0-rc.137",
-    "@vuepress/plugin-remove-pwa": "2.0.0-rc.135",
-    "markdownlint-cli2": "^0.23.3",
-    "sass-embedded": "^1.105.1",
-    "vue": "^3.5.43",
-    "vuepress": "2.0.0-rc.31",
+    "@vuepress/bundler-vite": "2.0.0-rc.32",
+    "@vuepress/plugin-comment": "2.0.0-rc.138",
+    "@vuepress/plugin-feed": "2.0.0-rc.138",
+    "@vuepress/plugin-llms": "2.0.0-rc.138",
+    "@vuepress/plugin-meilisearch": "2.0.0-rc.138",
+    "@vuepress/plugin-remove-pwa": "2.0.0-rc.138",
+    "markdownlint-cli2": "^0.24.1",
+    "sass-embedded": "^1.108.2",
+    "vue": "^3.5.45",
+    "vuepress": "2.0.0-rc.32",
     "vuepress-theme-hope": "2.0.0-rc.110"
   },
   "dependencies": {
-    "@scalar/openapi-parser": "^0.29.12",
-    "@waline/client": "^3.16.0",
-    "liquidjs": "^10.30.0",
+    "@scalar/openapi-parser": "^0.29.22",
+    "@waline/client": "^3.16.2",
+    "liquidjs": "^10.30.1",
     "openapi-types": "^12.1.3"
   }
 }

@@ -51,7 +51,7 @@ target="_blank"
 <LinkCard
 title="TASA-Ed RUST-API"
 description="TASA-Ed工作室提供的 RUST-API。"
-link="/wiki/api.html"
+link="/api/"
 />
 
 ### 非公开服务&网站

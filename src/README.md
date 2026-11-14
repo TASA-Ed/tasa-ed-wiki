@@ -46,7 +46,7 @@ link="/wiki/sgas.html"
 <LinkCard
 title="TASA-Ed RUST-API"
 description="TASA-Ed 工作室提供的 RUST-API。"
-link="/wiki/api.html"
+link="/api/"
 />
 
 <LinkCard
