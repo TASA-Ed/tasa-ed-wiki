@@ -37,7 +37,7 @@ export default hopeTheme({
   sidebar,
 
   // 页脚
-  footer: 'TASA-Ed 百科 | Copyright © 2020 - 2026 <a href=\"https://www.tasaed.top\">TASA-Ed工作室</a> licensed <a href=\"https://creativecommons.org/licenses/by-sa/4.0\" target=\"_blank\">CC BY-SA 4.0</a> | 友情链接：<a href=\"https://github.com/leamus/MakerFrame\" target=\"_blank\">鹰歌游戏引擎</a> , <a href=\"https://falldrift.github.io/jxzs/\" target=\"_blank\">剑心之誓</a><br/><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">蒙ICP备2026001527号-1</a> | <a href="https://beian.mps.gov.cn/#/query/webSearch?code=15010202151757" target="_blank">蒙公网安备15010202151757号</a><br/>Powered by <a href=\"https://vuejs.press\" target=\"_blank\">VuePress</a> | Theme by <a href=\"https://theme-hope.vuejs.press\" target=\"_blank\">Hope</a>',
+  footer: 'TASA-Ed 百科 | Copyright © 2020 - 2026 <a href="https://www.tasaed.top">TASA-Ed工作室</a> licensed <a href="https://creativecommons.org/licenses/by-sa/4.0" target="_blank">CC BY-SA 4.0</a> | 友情链接：<a href="https://github.com/leamus/MakerFrame" target="_blank">鹰歌游戏引擎</a> , <a href="https://falldrift.github.io/jxzs/" target="_blank">剑心之誓</a><br/><a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">蒙ICP备2026001527号-1</a> | <a href="https://beian.mps.gov.cn/#/query/webSearch?code=15010202151757" target="_blank">蒙公网安备15010202151757号</a><br/>Powered by <a href="https://vuejs.press" target="_blank">VuePress</a> | Theme by <a href="https://theme-hope.vuejs.press" target="_blank">Hope</a>',
   copyright: false,
   displayFooter: true,
 
@@ -54,7 +54,7 @@ export default hopeTheme({
   },
 
   plugins: {
-    // rc.124
+    // 注：评论组件版本必须与主题使用的版本对齐
     comment: {
       provider: "Waline",
       locales: {
