@@ -57,14 +57,15 @@ export default hopeTheme({
     // 注：评论组件版本必须与主题使用的版本对齐
     comment: {
       provider: "Waline",
+      serverURL: "https://api.tasaed.top/talk",
       locales: {
         '/': {
           admin: '可爱的管理员',
           level0: '萌新',
-          level1: '普通',
-          level2: '高手',
-          level3: '小佬',
-          level4: '大佬',
+          level1: '大萌新',
+          level2: '大大萌新',
+          level3: '大大大萌新',
+          level4: '大大大大萌新',
           level5: '真萌新',
           reaction0: '点赞',
           reaction1: '戳一戳',
