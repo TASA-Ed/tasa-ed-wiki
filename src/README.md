@@ -19,12 +19,14 @@ TASA-Ed 百科仍在完善内容中！
 title="TASA-Ed 工作室"
 description="关于我们。"
 link="/wiki/tasaed.html"
+target="_self"
 />
 
 <LinkCard
 title="德二吹风机"
 description="关于工作室创始人。"
 link="/wiki/ccd2s.html"
+target="_self"
 />
 
 ## 百科 - 项目
@@ -35,24 +37,28 @@ link="/wiki/ccd2s.html"
 title="SCP 2.5D(或SE)"
 description="TASA-Ed 工作室的第一个作品（项目）。"
 link="/wiki/scp25d.html"
+target="_self"
 />
 
 <LinkCard
 title="SCP游戏助手"
 description="TASA-Ed 工作室的一款应用。"
 link="/wiki/sgas.html"
+target="_self"
 />
 
 <LinkCard
 title="TASA-Ed RUST-API"
 description="TASA-Ed 工作室提供的 RUST-API。"
 link="/api/"
+target="_self"
 />
 
 <LinkCard
 title="TASA-Ed网站"
 description="泛指 TASA-Ed 工作室的所有网站。"
 link="/wiki/ourwebsite.html"
+target="_self"
 />
 
 ## 其他

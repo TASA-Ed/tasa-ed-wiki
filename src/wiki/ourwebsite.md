@@ -52,6 +52,7 @@ target="_blank"
 title="TASA-Ed RUST-API"
 description="TASA-Ed工作室提供的 RUST-API。"
 link="/api/"
+target="_self"
 />
 
 ### 非公开服务&网站
